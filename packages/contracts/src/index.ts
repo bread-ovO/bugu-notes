@@ -1,3 +1,5 @@
+import { nextActionRequestSchema, type NextActionSnapshot, type NextActionSettings, type NextFeedbackKind } from './next-action'
+export * from './next-action'
 import { taskChatRequestSchema, type ChatSnapshot } from './task-chat'
 export * from './task-chat'
 import { modelProviderRequestSchema, type ModelConfig, type ModelProviderSnapshot } from './model-provider'
@@ -236,6 +238,7 @@ const coreRequestSchema = {
     credentialRequestSchema,
     modelProviderRequestSchema,
     taskChatRequestSchema,
+    nextActionRequestSchema,
     pluginsRequestSchema,
     ...petRequestSchemas,
   ],
@@ -486,6 +489,14 @@ export type CoreReply<T = Health> =
         | 'INGESTION_PROBE_UNAVAILABLE'
     }
 export interface DesktopBridge {
+  readonly nextActionPreview: boolean
+  nextAction: {
+    status(): Promise<CoreReply<NextActionSnapshot>>
+    configure(settings: NextActionSettings, expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+    clear(expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+    feedback(choiceId: string, kind: NextFeedbackKind, expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+    undo(feedbackId: string, expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+  }
   readonly platform: 'darwin' | 'win32' | 'linux' | 'other'
   readonly startupMode: 'demo' | 'real' | null
   onOpenPetSettings?(callback: () => void): () => void

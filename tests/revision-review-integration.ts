@@ -352,7 +352,7 @@ try {
     "INSERT INTO evidence_links VALUES('large-history',?,'a',1,'c',?,'supports','valid','Legacy fixture')",
   ).run(taskId, largeFirst)
   db.exec(
-    'DROP TABLE model_analysis_windows; DROP TABLE model_analysis_acceptances; DROP TABLE model_analyses; DROP TABLE agent_chat_runs; DROP TABLE agent_task_trash; DROP TABLE delivery_audit; DROP TABLE delivery_links; DROP TABLE delivery_workflows; DROP TABLE task_merges; DROP TABLE task_splits; DROP TABLE plan_change_assessments; DROP TABLE source_association_audit; DROP TABLE explicit_identity_mappings; DROP TABLE task_source_anchors; DROP TABLE source_object_bindings; DROP TABLE plan_change_proposals; ALTER TABLE source_events DROP COLUMN metadata_json; DROP TABLE reference_revision_audit; DROP TABLE feishu_page_tokens; DROP TABLE feishu_credential_cooldowns; DROP TABLE feishu_connections; DROP TABLE github_credential_cooldowns; DROP TABLE github_connections; DROP TABLE reference_revision_decisions; DROP TABLE reference_revision_reviews; PRAGMA user_version=10',
+    'DROP TABLE next_action_feedback; DROP TABLE next_action_choices; DROP TABLE next_action_events; DROP TABLE next_action_grants; DROP TABLE next_action_preferences; DROP TABLE next_action_state; DROP TABLE model_analysis_windows; DROP TABLE model_analysis_acceptances; DROP TABLE model_analyses; DROP TABLE agent_chat_runs; DROP TABLE agent_task_trash; DROP TABLE delivery_audit; DROP TABLE delivery_links; DROP TABLE delivery_workflows; DROP TABLE task_merges; DROP TABLE task_splits; DROP TABLE plan_change_assessments; DROP TABLE source_association_audit; DROP TABLE explicit_identity_mappings; DROP TABLE task_source_anchors; DROP TABLE source_object_bindings; DROP TABLE plan_change_proposals; ALTER TABLE source_events DROP COLUMN metadata_json; DROP TABLE reference_revision_audit; DROP TABLE feishu_page_tokens; DROP TABLE feishu_credential_cooldowns; DROP TABLE feishu_connections; DROP TABLE github_credential_cooldowns; DROP TABLE github_connections; DROP TABLE reference_revision_decisions; DROP TABLE reference_revision_reviews; PRAGMA user_version=10',
   )
   const migrated = openStore(path)
   const large = migrated.revisionReview.reviewReference({
@@ -364,7 +364,7 @@ try {
   assert.equal(large.reference.status, 'review_required')
   assert.equal(large.events.length, 1)
   assert.ok(large.nextCursor)
-  assert.equal(db.pragma('user_version', { simple: true }), 25)
+  assert.equal(db.pragma('user_version', { simple: true }), 26)
   migrated.close()
   console.log('revision review integration passed')
 } finally {

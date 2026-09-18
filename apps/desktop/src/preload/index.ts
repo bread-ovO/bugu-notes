@@ -1,6 +1,14 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { DesktopBridge } from '@memo/contracts'
 const bridge: DesktopBridge = {
+  nextActionPreview: process.argv.includes('--bugu-next-action-preview'),
+  nextAction: Object.freeze({
+    status: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.status' }),
+    configure: (settings, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.configure', settings, expectedVersion }),
+    clear: (expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.clear', expectedVersion }),
+    feedback: (choiceId, kind, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.feedback', choiceId, kind, expectedVersion }),
+    undo: (feedbackId, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.undo', feedbackId, expectedVersion }),
+  }),
   platform: ['darwin', 'win32', 'linux'].includes(process.platform)
     ? process.platform as 'darwin' | 'win32' | 'linux'
     : 'other',

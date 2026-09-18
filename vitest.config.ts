@@ -6,7 +6,7 @@ export default defineConfig({
     alias: {
       '@memo/contracts/pet-voice-pcm': resolve('packages/contracts/src/pet-voice-pcm.ts'),
       ...Object.fromEntries(
-        ['domain', 'contracts', 'application', 'plugin-host', 'connectors', 'model'].map(name => [
+        ['domain', 'contracts', 'application', 'plugin-host', 'connectors', 'model', 'next-action'].map(name => [
           `@memo/${name}`, resolve(`packages/${name}/src/index.ts`),
         ]),
       ),

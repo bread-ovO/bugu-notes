@@ -1,6 +1,6 @@
 import { utilityProcess, type UtilityProcess } from 'electron'
 import { randomUUID } from 'node:crypto'
-import { taskExtractionSchema, taskChatOutputSchema } from '@memo/contracts'
+import { modelPurposeSchema } from './model-purpose'
 import type { TaskModelRequest } from '@memo/model'
 import type { CoreReply, HostRequest } from '@memo/contracts'
 export class CoreClient {
@@ -44,6 +44,12 @@ export class CoreClient {
           return
         }
         if (message.kind === 'model.analyze') {
+          const purpose = 'purpose' in message ? message.purpose : undefined
+          let schema: object
+          try { schema = modelPurposeSchema(purpose) } catch {
+            child.postMessage({ kind: 'model.result', id, error: 'MODEL_INVALID_PURPOSE' })
+            return
+          }
           if (
             !this.modelHandler ||
             this.modelCalls.size ||
@@ -69,10 +75,8 @@ export class CoreClient {
           this.modelCalls.set(id, controller)
           void this.modelHandler({
             messages: message.messages,
-            schema:
-              'purpose' in message && message.purpose === 'task-chat'
-                ? taskChatOutputSchema
-                : taskExtractionSchema,
+            schema,
+            purpose: purpose as TaskModelRequest['purpose'],
             signal: controller.signal,
           })
             .then((result) => {

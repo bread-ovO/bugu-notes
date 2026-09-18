@@ -99,6 +99,7 @@ const trayHost = {
   },
 }
 // Isolated test data is explicitly opt-in; production never reads this override.
+const nextActionPreview = !app.isPackaged && process.argv.includes('--bugu-next-action-preview')
 if (!app.isPackaged && process.env.MEMO_TEST_USER_DATA)
   app.setPath('userData', resolve(process.env.MEMO_TEST_USER_DATA))
 const devURL = !app.isPackaged ? process.env.ELECTRON_RENDERER_URL : undefined
@@ -421,6 +422,7 @@ else {
           () => window?.webContents ?? null,
           pageURL,
           async (request) => {
+            if (request.method.startsWith('nextAction.') && !nextActionPreview) return { ok: false as const, error: 'INVALID_REQUEST' as const }
             if (
               request.method === 'pet.voiceState' ||
               request.method === 'pet.configureVoice' ||
@@ -813,7 +815,7 @@ function createWindow() {
     icon: join(__dirname, '../renderer/icon.png'),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      additionalArguments: startupMode ? [`--bugu-mode=${startupMode}`] : [],
+      additionalArguments: [...(startupMode ? [`--bugu-mode=${startupMode}`] : []), ...(nextActionPreview ? ['--bugu-next-action-preview'] : [])],
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,

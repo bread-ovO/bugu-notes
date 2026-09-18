@@ -1,3 +1,4 @@
+import { NextActionSettingsPanel } from './next-action-settings'
 import { TaskChatPanel } from './task-chat-panel'
 import { ChatCircleIcon } from '@phosphor-icons/react'
 import { HelpTip } from './ui/help-tip'
@@ -820,6 +821,7 @@ function App() {
               设置<span className="heading-dot">.</span>
             </h1>
 
+            {window.memo.nextActionPreview && <Disclosure id="settings-next-action" title="猜你想做" description="事件学习与提示设置 · 开发预览"><NextActionSettingsPanel /></Disclosure>}
             <Disclosure descriptionAsHelp id="settings-model" title="AI 模型" description="分析与聊天共用的模型服务和调用授权">
               <ModelProviderSettings defaultOpen />
             </Disclosure>

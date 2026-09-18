@@ -1,0 +1,18 @@
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2px; background: transparent; font: 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #242424; overflow: hidden; }
+.next-hint { position: relative; height: 68px; display: flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 12px; border: 1px solid #dedede; background: #fff; animation: hint-in 160ms ease-out both; }
+.next-hint.leaving { animation: hint-out 180ms ease-in both; pointer-events: none; }
+.next-hint-action { flex: 1; display: flex; align-items: center; gap: 12px; min-width: 0; height: 100%; text-align: left; }
+button { font: inherit; border: 0; background: transparent; color: inherit; cursor: pointer; padding: 0; }
+button:focus-visible { outline: 2px solid #245fed; outline-offset: 2px; border-radius: 4px; }
+.next-hint-action > span { flex: 1; min-width: 0; }
+.next-hint-action small { display: block; color: #777; font-size: 12px; margin-bottom: 4px; }
+.next-hint-action strong { display: block; font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+kbd { font: inherit; font-size: 12px; border: 1px solid #ddd; border-radius: 4px; padding: 4px; }
+.next-hint-close { display: grid; place-items: center; width: 24px; height: 24px; flex-shrink: 0; color: #777; }
+.next-hint-countdown { pointer-events: none; position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); }
+.next-hint-countdown rect { fill: none; stroke: #b89158; stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 0; animation: hint-count linear forwards; }
+@keyframes hint-count { to { stroke-dashoffset: 1; } }
+@keyframes hint-in { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes hint-out { to { opacity: 0; transform: translateX(-24px); } }
+@media (prefers-reduced-motion: reduce) { .next-hint, .next-hint.leaving { animation-duration: 1ms; } .next-hint-countdown rect { animation-timing-function: steps(3, end); } }

@@ -36,6 +36,8 @@ test('packaged renderer connects to isolated SQLite core without exposing Node',
     ).toEqual({
       node: 'undefined',
       keys: [
+        'nextActionPreview',
+        'nextAction',
         'platform',
         'startupMode',
         'onOpenPetSettings',
@@ -71,7 +73,7 @@ test('packaged renderer connects to isolated SQLite core without exposing Node',
     expect(reply.ok).toBe(true)
     if (reply.ok) {
       expect(reply.data.eventCount).toBe(0)
-      expect(reply.data.schemaVersion).toBe(25)
+      expect(reply.data.schemaVersion).toBe(26)
     }
     const modelStatus = await page.evaluate(() =>
       window.memo.modelProvider.status(),
@@ -101,7 +103,7 @@ test('packaged renderer connects to isolated SQLite core without exposing Node',
       .getByRole('button', { name: '保存模型配置', exact: true })
       .click()
     await expect(
-      page.getByText('配置已保存。下次分析使用此服务。'),
+      page.getByText('分析已关闭；手动管理事项仍可使用。'),
     ).toBeVisible()
     expect(
       (await page.evaluate(() => window.memo.modelProvider.status())).ok,

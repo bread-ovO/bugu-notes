@@ -1,3 +1,4 @@
+import { createNextActionService } from './next-action-service'
 import { createTaskChatService } from './task-chat'
 import { createTaskModelBridge } from './task-model-bridge'
 import { handleFeishuHost, isFeishuHostRequest } from './feishu'
@@ -25,6 +26,8 @@ const processing = createLocalProcessing(store)
 const modelBridge = createTaskModelBridge(parentPort)
 const analysis = createTaskAnalysisService(store, modelBridge)
 const chat = createTaskChatService(store, modelBridge)
+const nextAction = createNextActionService(store, modelBridge)
+store.nextAction.prune()
 analysis.start()
 parentPort.on('message', async ({ data }) => {
   if (
@@ -42,7 +45,9 @@ parentPort.on('message', async ({ data }) => {
     if (request.method.startsWith('pet.')) throw new Error('INVALID_REQUEST')
     reply = {
       ok: true,
-      data: request.method === 'chat.draft' || request.method === 'chat.status' || request.method === 'chat.send' || request.method === 'chat.confirm' || request.method === 'chat.cancel' || request.method === 'chat.reject'
+      data: request.method === 'nextAction.status' || request.method === 'nextAction.configure' || request.method === 'nextAction.clear' || request.method === 'nextAction.feedback' || request.method === 'nextAction.undo'
+        ? nextAction.handle(request)
+        : request.method === 'chat.draft' || request.method === 'chat.status' || request.method === 'chat.send' || request.method === 'chat.confirm' || request.method === 'chat.cancel' || request.method === 'chat.reject'
         ? chat.handle(request)
         : request.method === 'analysis.start' || request.method === 'analysis.status' || request.method === 'analysis.accept'
         ? analysis.handle(request)
@@ -134,6 +139,7 @@ process.on('exit', () => {
   processing.dispose()
   analysis.dispose()
   chat.dispose()
+  nextAction.dispose()
   store.close()
 })
 parentPort.postMessage({ ready: true })
