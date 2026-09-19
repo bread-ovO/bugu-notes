@@ -3,6 +3,7 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { basename, join } from 'node:path'
 import { homedir } from 'node:os'
+import { createHash } from 'node:crypto'
 const exec = promisify(execFile)
 export interface InstalledTool {
   id: string
@@ -130,7 +131,7 @@ export async function installedTools(): Promise<InstalledTool[]> {
           )
             results.push({
               id: app?.id ?? `mac.${identity}`,
-              label: app?.label ?? entry.slice(0, -4),
+              label: (app?.label ?? entry.slice(0, -4)).slice(0, 120),
               identity,
               path,
             })
@@ -247,31 +248,51 @@ export async function validateCustomTool(path: string): Promise<InstalledTool> {
     )
     return {
       id: app?.id ?? `mac.${identity}`,
-      label: app?.label ?? basename(path, '.app'),
+      label: (app?.label ?? basename(path, '.app')).slice(0, 120),
       identity,
       path,
     }
   }
   if (process.platform === 'win32' && /\.exe$/i.test(path))
-    return {
-      id: `win.${basename(path).toLowerCase()}`,
-      label: basename(path, '.exe'),
-      identity: basename(path).toLowerCase(),
-      path,
-    }
-  if (
-    process.platform === 'linux' &&
-    !await isExecutableHeader(path)
-  )
+    return executableTool(path, 'win32')
+  if (process.platform === 'linux' && !(await isExecutableHeader(path)))
     throw Error('NEXT_INVALID_TARGET')
-  if (process.platform === 'linux')
-    return {
-      id: `linux.${basename(path)}`,
-      label: basename(path),
-      identity: basename(path),
-      path,
-    }
+  if (process.platform === 'linux') return executableTool(path, 'linux')
   throw Error('NEXT_INVALID_TARGET')
 }
 
-async function isExecutableHeader(path:string){const file=await open(path,'r');try{const buffer=Buffer.alloc(4);const {bytesRead}=await file.read(buffer,0,4,0);return bytesRead===4&&buffer.equals(Buffer.from([0x7f,0x45,0x4c,0x46]))}finally{await file.close()}}
+export function executableTool(
+  path: string,
+  platform: 'win32' | 'linux',
+): InstalledTool {
+  const name = basename(path)
+  const identity = platform === 'win32' ? name.toLowerCase() : name
+  const app = known.find((a) =>
+    platform === 'win32'
+      ? a.win.toLowerCase() === identity
+      : a.linux === identity,
+  )
+  return {
+    id:
+      app?.id ??
+      `${platform}.${createHash('sha256').update(identity).digest('hex').slice(0, 24)}`,
+    label: (
+      app?.label ?? (platform === 'win32' ? name.replace(/\.exe$/i, '') : name)
+    ).slice(0, 120),
+    identity,
+    path,
+  }
+}
+
+async function isExecutableHeader(path: string) {
+  const file = await open(path, 'r')
+  try {
+    const buffer = Buffer.alloc(4)
+    const { bytesRead } = await file.read(buffer, 0, 4, 0)
+    return (
+      bytesRead === 4 && buffer.equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46]))
+    )
+  } finally {
+    await file.close()
+  }
+}

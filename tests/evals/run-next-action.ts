@@ -4,7 +4,7 @@ import { analyzeNextAction } from '@memo/model'
 import type { ModelConfig } from '@memo/contracts'
 import { callModelApi } from '../../apps/desktop/src/main/task-api-provider'
 import { callModelCli } from '../../apps/desktop/src/main/task-cli-provider'
-import { nextActionCorpus } from '../fixtures/next-action-corpus'
+import { nextActionEvaluationOrder } from '../fixtures/next-action-corpus'
 async function main() {
   const args = process.argv.slice(2),
     option = (key: string, fallback = '') =>
@@ -48,12 +48,7 @@ async function main() {
   }> = []
   // Interleave modes so a smoke run covers classification, attribution and recommendation.
   const modes = ['classify-event', 'attribute-transition', 'recommend']
-  const groups = modes.map((mode) =>
-    nextActionCorpus.filter((c) => c.input.mode === mode),
-  )
-  const ordered = []
-  for (let i = 0; i < 160; i++)
-    for (const group of groups) if (group[i]) ordered.push(group[i]!)
+  const ordered = nextActionEvaluationOrder()
   let consecutiveErrors = 0
   for (const c of ordered.slice(0, limit)) {
     const started = Date.now()

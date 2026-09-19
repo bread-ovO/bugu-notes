@@ -1,7 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { browserObject } from '../../apps/desktop/src/main/next-action/browser-bridge'
 import { ModelQueue } from '../../apps/desktop/src/main/model-queue'
-import { parseCoreRequest, parseHostRequest, nextActionWireSchema, parseNextActionOutput } from '@memo/contracts'
+import {
+  parseCoreRequest,
+  parseHostRequest,
+  nextActionWireSchema,
+  parseNextActionOutput,
+} from '@memo/contracts'
 import { canRecommend } from '@memo/next-action'
 import { event, learning } from '../fixtures/next-action'
 const token = 'a'.repeat(64)
@@ -215,7 +220,73 @@ it('explicit preferences do not bypass independent choices or this-event rejecti
   expect(canRecommend(event(), data, true)).toBe(false)
 })
 
-it('uses provider-compatible wire schema but retains strict duplicate rejection locally',()=>{
-  expect(nextActionWireSchema.properties.targetIds).not.toHaveProperty('uniqueItems')
-  expect(()=>parseNextActionOutput(JSON.stringify({mode:'recommend',eventType:'bug_fix',action:'handle',related:true,confidence:1,targetIds:['a','a'],citations:[],reason:'fixture'}))).toThrow()
+it('uses provider-compatible wire schema but retains strict duplicate rejection locally', () => {
+  expect(nextActionWireSchema.properties.targetIds).not.toHaveProperty(
+    'uniqueItems',
+  )
+  expect(() =>
+    parseNextActionOutput(
+      JSON.stringify({
+        mode: 'recommend',
+        eventType: 'bug_fix',
+        action: 'handle',
+        related: true,
+        confidence: 1,
+        targetIds: ['a', 'a'],
+        citations: [],
+        reason: 'fixture',
+      }),
+    ),
+  ).toThrow()
+})
+
+import {
+  nextActionCorpus,
+  nextActionEvaluationOrder,
+} from '../fixtures/next-action-corpus'
+import { executableTool } from '../../apps/desktop/src/main/next-action/app-catalog'
+
+describe('evaluation sample coverage', () => {
+  it('preserves all cases and covers all types and negative attribution in the smoke subset', () => {
+    const ordered = nextActionEvaluationOrder()
+    expect(new Set(ordered.map((c) => c.id))).toEqual(
+      new Set(nextActionCorpus.map((c) => c.id)),
+    )
+    expect(ordered).toHaveLength(360)
+    const smoke = ordered.slice(0, 24)
+    expect(new Set(smoke.map((c) => c.family)).size).toBe(24)
+    expect(
+      new Set(
+        smoke
+          .filter((c) => c.input.mode === 'classify-event')
+          .map((c) => c.expected.type),
+      ).size,
+    ).toBe(8)
+    expect(
+      smoke.some(
+        (c) => c.input.mode === 'attribute-transition' && !c.expected.related,
+      ),
+    ).toBe(true)
+  })
+})
+
+describe('custom application identities', () => {
+  it('keeps labels readable while encoding spaces and long names in a bounded target id', () => {
+    const app = executableTool(`/apps/${'My Editor '.repeat(20)}.exe`, 'win32')
+    expect(app.id).not.toMatch(/\s/)
+    expect(app.label.length).toBeLessThanOrEqual(120)
+    expect(
+      parseHostRequest({
+        method: 'nextActionHost.targets',
+        targets: [{ id: app.id, label: app.label }],
+      }),
+    ).toBeTruthy()
+  })
+  it('uses the same known tool id whether discovered automatically or selected manually', () => {
+    expect(executableTool('/apps/Code.exe', 'win32').id).toBe('vscode')
+    expect(executableTool('/apps/codex', 'linux').id).toBe('codex')
+    expect(executableTool('/apps/My Editor.exe', 'win32').id).toBe(
+      executableTool('/elsewhere/my editor.EXE', 'win32').id,
+    )
+  })
 })

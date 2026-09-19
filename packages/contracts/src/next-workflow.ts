@@ -25,8 +25,18 @@ const ids = {
 } as const
 export const nextWorkflowRequestSchema = {
   oneOf: [
-    {type:'object',additionalProperties:false,required:['method'],properties:{method:{const:'nextAction.browserRemove'}}},
-    {type:'object',additionalProperties:false,required:['method'],properties:{method:{const:'nextAction.diagnostics'}}},
+    {
+      type: 'object',
+      additionalProperties: false,
+      required: ['method'],
+      properties: { method: { const: 'nextAction.browserRemove' } },
+    },
+    {
+      type: 'object',
+      additionalProperties: false,
+      required: ['method'],
+      properties: { method: { const: 'nextAction.diagnostics' } },
+    },
     {
       type: 'object',
       additionalProperties: false,

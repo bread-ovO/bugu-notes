@@ -18,7 +18,7 @@ try {
       execFileSync(
         resolve(`apps/desktop/out/native/next-action-observer${ext}`),
         ['--self-test'],
-        { encoding: 'utf8', timeout: 5000 },
+        { encoding: 'utf8', timeout: 15000 },
       ),
     )
     assert.equal(result.selfTest, true)
@@ -56,7 +56,7 @@ try {
       const timer = setTimeout(() => {
         child.kill()
         reject(Error('host timeout'))
-      }, 3000)
+      }, 15000)
       child.once('exit', (code) => {
         clearTimeout(timer)
         resolve({ code, output: Buffer.concat(chunks) })

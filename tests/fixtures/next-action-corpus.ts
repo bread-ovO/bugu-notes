@@ -242,3 +242,29 @@ for (const [type, texts] of Object.entries(phrases) as [
       })
     }
 export const nextActionCorpus = cases
+
+/** Cover types and independent semantic families before correlated variants. */
+export function nextActionEvaluationOrder() {
+  const modes = ['classify-event', 'attribute-transition', 'recommend'] as const
+  const groups = modes.map((mode) => {
+    const rows = cases.filter((c) => c.input.mode === mode)
+    const families = new Set<string>()
+    const first = rows.filter((c) => {
+      if (families.has(c.family)) return false
+      families.add(c.family)
+      return true
+    })
+    const buckets = Object.keys(phrases).map((type) =>
+      first.filter((c) => c.expected.type === type),
+    )
+    const ordered: NextEvalCase[] = []
+    for (let i = 0; i < Math.max(...buckets.map((b) => b.length)); i++)
+      for (const bucket of buckets) if (bucket[i]) ordered.push(bucket[i]!)
+    const initial = new Set(first.map((c) => c.id))
+    return [...ordered, ...rows.filter((c) => !initial.has(c.id))]
+  })
+  const ordered: NextEvalCase[] = []
+  for (let i = 0; i < Math.max(...groups.map((g) => g.length)); i++)
+    for (const group of groups) if (group[i]) ordered.push(group[i]!)
+  return ordered
+}

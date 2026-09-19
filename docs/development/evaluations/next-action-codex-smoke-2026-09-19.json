@@ -1,0 +1,197 @@
+{
+  "provider": "codex-cli",
+  "model": "CLI default",
+  "syntheticCases": true,
+  "planned": 24,
+  "executed": 24,
+  "passed": 24,
+  "familyCount": 24,
+  "complete": true,
+  "accuracy": 1,
+  "modes": {
+    "classify-event": {
+      "total": 8,
+      "passed": 8
+    },
+    "attribute-transition": {
+      "total": 8,
+      "passed": 8
+    },
+    "recommend": {
+      "total": 8,
+      "passed": 8
+    }
+  },
+  "note": "Synthetic fixture results only. Time/ordering variants are correlated and must not be counted as independent evidence of production accuracy.",
+  "date": "2026-09-19",
+  "results": [
+    {
+      "id": "classify-bug_fix-0",
+      "family": "classify-bug_fix-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 30742
+    },
+    {
+      "id": "link-0-0h",
+      "family": "link-0",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 28804
+    },
+    {
+      "id": "recommend-bug_fix-0-normal",
+      "family": "recommend-bug_fix-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 32048
+    },
+    {
+      "id": "classify-development-0",
+      "family": "classify-development-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 32053
+    },
+    {
+      "id": "link-1-0h",
+      "family": "link-1",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 30894
+    },
+    {
+      "id": "recommend-development-0-normal",
+      "family": "recommend-development-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 33503
+    },
+    {
+      "id": "classify-code_review-0",
+      "family": "classify-code_review-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 30775
+    },
+    {
+      "id": "link-2-0h",
+      "family": "link-2",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 30653
+    },
+    {
+      "id": "recommend-code_review-0-normal",
+      "family": "recommend-code_review-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 25497
+    },
+    {
+      "id": "classify-research-0",
+      "family": "classify-research-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 26579
+    },
+    {
+      "id": "link-3-0h",
+      "family": "link-3",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 31727
+    },
+    {
+      "id": "recommend-research-0-normal",
+      "family": "recommend-research-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 30119
+    },
+    {
+      "id": "classify-document-0",
+      "family": "classify-document-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 19743
+    },
+    {
+      "id": "link-4-0h",
+      "family": "link-4",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 22428
+    },
+    {
+      "id": "recommend-document-0-normal",
+      "family": "recommend-document-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 24726
+    },
+    {
+      "id": "classify-data-0",
+      "family": "classify-data-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 28708
+    },
+    {
+      "id": "link-5-0h",
+      "family": "link-5",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 28343
+    },
+    {
+      "id": "recommend-data-0-normal",
+      "family": "recommend-data-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 28724
+    },
+    {
+      "id": "classify-reply-0",
+      "family": "classify-reply-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 23141
+    },
+    {
+      "id": "link-6-0h",
+      "family": "link-6",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 28963
+    },
+    {
+      "id": "recommend-reply-0-normal",
+      "family": "recommend-reply-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 26988
+    },
+    {
+      "id": "classify-unknown-0",
+      "family": "classify-unknown-0",
+      "mode": "classify-event",
+      "passed": true,
+      "elapsedMs": 27691
+    },
+    {
+      "id": "link-7-0h",
+      "family": "link-7",
+      "mode": "attribute-transition",
+      "passed": true,
+      "elapsedMs": 33312
+    },
+    {
+      "id": "recommend-unknown-0-normal",
+      "family": "recommend-unknown-0",
+      "mode": "recommend",
+      "passed": true,
+      "elapsedMs": 27095
+    }
+  ]
+}
