@@ -35,7 +35,7 @@ void observeVisible(){
  IUIAutomation2* uia2=nullptr;if(SUCCEEDED(uia->QueryInterface(IID_PPV_ARGS(&uia2)))){uia2->put_ConnectionTimeout(100);uia2->put_TransactionTimeout(100);uia2->Release();}
  IUIAutomationTreeWalker* walker=nullptr;if(FAILED(uia->get_ControlViewWalker(&walker))){uia->Release();return;}
  std::map<long long,double> since;std::set<long long> emitted;HWND scannedWindow=nullptr;unsigned long scannedRevision=0;
- while(true){Sleep(1000);std::vector<Candidate> active;HWND window;unsigned long revision;{std::lock_guard<std::mutex> lock(guard);window=GetForegroundWindow();revision=watchRevision;for(auto c:candidates)if(c.app==appIdentity)active.push_back(c);}
+ while(true){Sleep(1000);std::vector<Candidate> active;HWND window;unsigned long revision;std::string scannedApp;{std::lock_guard<std::mutex> lock(guard);window=GetForegroundWindow();if(window!=previous)continue;scannedApp=appIdentity;revision=watchRevision;for(auto c:candidates)if(c.app==scannedApp)active.push_back(c);}
   if(window!=scannedWindow||revision!=scannedRevision){since.clear();emitted.clear();scannedWindow=window;scannedRevision=revision;}
   if(active.empty()){since.clear();emitted.clear();{std::lock_guard<std::mutex> lock(guard);send("{\"type\":\"visible-set\",\"ids\":[]}");}continue;}
   IUIAutomationElement* root=nullptr;if(FAILED(uia->ElementFromHandle(window,&root))||!root){since.clear();emitted.clear();std::lock_guard<std::mutex> lock(guard);send("{\"type\":\"visible-set\",\"ids\":[]}");continue;}
@@ -46,7 +46,7 @@ void observeVisible(){
    if(node!=root){IUIAutomationElement* next=nullptr;if(SUCCEEDED(walker->GetNextSiblingElement(node,&next))&&next)stack.push_back(next);}node->Release();
   }
   for(auto node:stack)node->Release();
-  std::lock_guard<std::mutex> lock(guard);if(window!=GetForegroundWindow()||revision!=watchRevision){since.clear();emitted.clear();send("{\"type\":\"visible-set\",\"ids\":[]}");continue;}
+  std::lock_guard<std::mutex> lock(guard);if(window!=GetForegroundWindow()||scannedApp!=appIdentity||revision!=watchRevision){since.clear();emitted.clear();send("{\"type\":\"visible-set\",\"ids\":[]}");continue;}
   for(auto it=since.begin();it!=since.end();)if(!found.count(it->first)){emitted.erase(it->first);it=since.erase(it);}else ++it;
   std::string ids;for(auto id:found){if(!ids.empty())ids+=",";ids+=std::to_string(id);}send("{\"type\":\"visible-set\",\"ids\":["+ids+"]}");
   for(auto id:found){if(!since.count(id))since[id]=now();if(now()-since[id]>=1500&&!emitted.count(id)){emitted.insert(id);send("{\"type\":\"visible\",\"recordId\":"+std::to_string(id)+"}");}}
