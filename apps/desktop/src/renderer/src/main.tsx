@@ -1,3 +1,4 @@
+import { NextActionEntry } from './next-action-workbench'
 import { NextActionSettingsPanel } from './next-action-settings'
 import { TaskChatPanel } from './task-chat-panel'
 import { ChatCircleIcon } from '@phosphor-icons/react'
@@ -360,6 +361,7 @@ function App() {
             个人空间<span>/</span>
             <strong>{page}</strong>
           </div>
+          <NextActionEntry />
           {DEMO_ENABLED && !window.memo.startupMode && (
             <div className="mode-switch" aria-label="数据模式">
               <AppButton

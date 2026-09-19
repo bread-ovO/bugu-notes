@@ -73,7 +73,7 @@ test('packaged renderer connects to isolated SQLite core without exposing Node',
     expect(reply.ok).toBe(true)
     if (reply.ok) {
       expect(reply.data.eventCount).toBe(0)
-      expect(reply.data.schemaVersion).toBe(26)
+      expect(reply.data.schemaVersion).toBe(27)
     }
     const modelStatus = await page.evaluate(() =>
       window.memo.modelProvider.status(),

@@ -15,7 +15,7 @@ async function main() {
   const path = join(root, 'store.sqlite')
   let store = openStore(path)
   try {
-    assert.equal(store.health().schemaVersion, 26)
+    assert.equal(store.health().schemaVersion, 27)
     store.tasks.createProject('project-a', '虚构测试项目')
     store.tasks.createProject('project-b', '隔离测试项目')
     const grant = { projectId: 'project-a', accountId: 'account-a', sourceId: 'source-a', revision: 1, active: true }
@@ -97,10 +97,10 @@ async function main() {
     // Recreate the v25 boundary while preserving existing workspace tables.
     store.close()
     const oldDb = new Database(path)
-    oldDb.exec('DROP TABLE next_action_feedback; DROP TABLE next_action_choices; DROP TABLE next_action_events; DROP TABLE next_action_grants; DROP TABLE next_action_preferences; DROP TABLE next_action_state; PRAGMA user_version=25;')
+    oldDb.exec('DROP TABLE next_action_scopes; DROP TABLE next_action_suggestions; DROP TABLE next_action_observation; DROP TABLE next_action_budget; DROP TABLE next_action_feedback; DROP TABLE next_action_choices; DROP TABLE next_action_events; DROP TABLE next_action_grants; DROP TABLE next_action_preferences; DROP TABLE next_action_state; PRAGMA user_version=25;')
     oldDb.close()
     store = openStore(path)
-    assert.equal(store.health().schemaVersion, 26)
+    assert.equal(store.health().schemaVersion, 27)
     store.nextAction.grant(grant) // Existing project survived migration.
     store.nextAction.configure({ ...defaultNextActionSettings, enabled: true }, store.nextAction.snapshot().version)
     store.nextAction.putEvent(testEvent('retained'), store.nextAction.snapshot().version)

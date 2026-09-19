@@ -1,0 +1,134 @@
+import { mkdir, writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { analyzeNextAction } from '@memo/model'
+import type { ModelConfig } from '@memo/contracts'
+import { callModelApi } from '../../apps/desktop/src/main/task-api-provider'
+import { callModelCli } from '../../apps/desktop/src/main/task-cli-provider'
+import { nextActionCorpus } from '../fixtures/next-action-corpus'
+async function main() {
+  const args = process.argv.slice(2),
+    option = (key: string, fallback = '') =>
+      args.includes(key) ? (args[args.indexOf(key) + 1] ?? fallback) : fallback
+  if (!args.includes('--live'))
+    throw Error('LIVE_MODEL_REQUIRES_EXPLICIT_LIVE_FLAG')
+  const provider = option('--provider', 'codex-cli') as ModelConfig['provider'],
+    limit = Number(option('--limit', '360'))
+  if (
+    !['codex-cli', 'claude-cli', 'responses', 'chat-completions'].includes(
+      provider,
+    ) ||
+    !Number.isInteger(limit) ||
+    limit < 1 ||
+    limit > 360
+  )
+    throw Error('INVALID_EVAL_ARGUMENT')
+  const config: ModelConfig = {
+    provider,
+    enabled: true,
+    model: option('--model'),
+    baseUrl: option('--base-url', 'https://api.openai.com/v1'),
+    credentialId: '',
+  }
+  if (
+    ['responses', 'chat-completions'].includes(provider) &&
+    !process.env.BUGU_EVAL_API_KEY
+  )
+    throw Error('EVAL_API_KEY_REQUIRED')
+  const output = resolve(
+    option('--output', `test-results/next-action-eval/${Date.now()}`),
+  )
+  await mkdir(output, { recursive: true })
+  const results: Array<{
+    id: string
+    family: string
+    mode: string
+    passed: boolean
+    error?: string
+    elapsedMs: number
+  }> = []
+  // Interleave modes so a smoke run covers classification, attribution and recommendation.
+  const modes = ['classify-event', 'attribute-transition', 'recommend']
+  const groups = modes.map((mode) =>
+    nextActionCorpus.filter((c) => c.input.mode === mode),
+  )
+  const ordered = []
+  for (let i = 0; i < 160; i++)
+    for (const group of groups) if (group[i]) ordered.push(group[i]!)
+  let consecutiveErrors = 0
+  for (const c of ordered.slice(0, limit)) {
+    const started = Date.now()
+    let passed = false,
+      error: string | undefined
+    try {
+      const result = await analyzeNextAction(
+        c.input,
+        (request) =>
+          ['responses', 'chat-completions'].includes(provider)
+            ? callModelApi(config, request, process.env.BUGU_EVAL_API_KEY!)
+            : callModelCli(config, request),
+        AbortSignal.timeout(65000),
+      )
+      passed =
+        result.eventType === c.expected.type &&
+        result.related === c.expected.related &&
+        (!c.expected.targetIds ||
+          (!c.expected.related
+            ? result.targetIds.length === 0
+            : result.targetIds[0] === c.expected.targetIds[0]))
+      consecutiveErrors = 0
+    } catch (e) {
+      error =
+        e instanceof Error && /^[A-Z_]+$/.test(e.message)
+          ? e.message
+          : 'MODEL_OR_VALIDATION_FAILED'
+      consecutiveErrors++
+    }
+    results.push({
+      id: c.id,
+      family: c.family,
+      mode: c.input.mode,
+      passed,
+      ...(error ? { error } : {}),
+      elapsedMs: Date.now() - started,
+    })
+    await writeFile(
+      resolve(output, 'results.json'),
+      JSON.stringify(results, null, 2),
+    )
+    console.log(
+      `${results.length}/${limit} ${c.id}: ${passed ? 'PASS' : (error ?? 'FAIL')}`,
+    )
+    if (consecutiveErrors >= 3) break
+  }
+  const report = {
+    provider,
+    model: config.model || 'CLI default',
+    syntheticCases: true,
+    planned: limit,
+    executed: results.length,
+    passed: results.filter((r) => r.passed).length,
+    familyCount: new Set(results.map((r) => r.family)).size,
+    complete: results.length === limit,
+    accuracy: results.filter((r) => r.passed).length / results.length,
+    modes: Object.fromEntries(
+      modes.map((mode) => {
+        const rows = results.filter((r) => r.mode === mode)
+        return [
+          mode,
+          { total: rows.length, passed: rows.filter((r) => r.passed).length },
+        ]
+      }),
+    ),
+    note: 'Synthetic fixture results only. Time/ordering variants are correlated and must not be counted as independent evidence of production accuracy.',
+  }
+  await writeFile(
+    resolve(output, 'report.json'),
+    JSON.stringify(report, null, 2),
+  )
+  console.log(JSON.stringify(report))
+  if (!report.complete || report.accuracy < 0.99) process.exitCode = 1
+}
+void main().catch((e) => {
+  console.error(e instanceof Error ? e.message : 'EVAL_FAILED')
+  process.exitCode = 1
+})

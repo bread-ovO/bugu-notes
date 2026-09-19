@@ -118,6 +118,15 @@ export const nextActionOutputSchema = {
     reason: { type: 'string', maxLength: 300 },
   },
 } as const
+// Provider structured-output schemas support a smaller JSON Schema vocabulary.
+// Keep uniqueness enforced by the local validator, but don't send uniqueItems to providers.
+export const nextActionWireSchema = {
+  ...nextActionOutputSchema,
+  properties: {
+    ...nextActionOutputSchema.properties,
+    targetIds: { type:'array', maxItems:3, items:id },
+  },
+} as const
 export type NextActionOutput = FromSchema<typeof nextActionOutputSchema>
 export interface NextModelInput {
   mode: NextActionOutput['mode']

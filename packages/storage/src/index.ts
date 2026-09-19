@@ -1,3 +1,4 @@
+import { createNextWorkflowStore, migrateNextWorkflow } from './next-workflow'
 import { createNextActionStore, migrateNextAction } from './next-action'
 import { createTaskChat, migrateTaskChat } from './task-chat'
 import { createTaskAnalysis, migrateTaskAnalysis } from './task-analysis'
@@ -89,7 +90,7 @@ export function openStore(path: string) {
     db.pragma('synchronous = FULL')
     db.pragma('busy_timeout = 3000')
     const version = db.pragma('user_version', { simple: true }) as number
-    if (version > 26) throw new Error('DATABASE_TOO_NEW')
+    if (version > 27) throw new Error('DATABASE_TOO_NEW')
     if (version < 1)
       db.transaction(() => {
         db.exec(`
@@ -139,6 +140,7 @@ export function openStore(path: string) {
     if (version < 24) migrateTaskChat(db)
     if (version < 25) migrateAnalysisWindows(db)
     if (version < 26) migrateNextAction(db)
+    if (version < 27) migrateNextWorkflow(db)
     const contexts = createEventContexts(db)
     const receive = createEventReceiver(
       db,
@@ -155,6 +157,7 @@ export function openStore(path: string) {
     const feishu = createFeishu(db, receive, observeEvent)
     return {
       nextAction: createNextActionStore(db),
+      nextWorkflow: createNextWorkflowStore(db),
       taskAnalysis: createTaskAnalysis(db),
       taskChat: createTaskChat(db),
       delivery: createDelivery(db),

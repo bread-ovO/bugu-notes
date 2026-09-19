@@ -693,7 +693,7 @@ Renderer 允许的接口限定为：读取能力、查看/修改授权、请求�
 | 针对性 E2E | 桌宠关闭/无模型仍提示、源应用保焦点、改键/冲突/仅点击、Tab 输入避让/停止输入后完整倒计时/恢复输入时释放、边框倒计时、退场/失效、纠错与清除 | 截图、trace、断言 |
 | 打包 | 安装/升级/启动、helper 与 host 随包、签名/权限、卸载清理 | 三平台真实产物与校验值 |
 
-已新增定向命令 `test:next-action`、`test:next-action:e2e`，数据库集成使用 `test:storage next-action-integration`。`eval:next-action`、`test:next-action:native` 尚未实现；测试夹具通过不代表真实模型质量达标。
+已新增定向命令 `test:next-action`、`test:next-action:e2e`，数据库集成使用 `test:storage next-action-integration`。`eval:next-action`、`test:next-action:native` 已加入；另有 `next-workflow` 的真实桥接 E2E 和集成测试。测试夹具通过不代表真实模型质量达标。
 
 跨包变更运行 `pnpm check:boundaries` 和 `pnpm typecheck`；E2E 只跑 `next-action` 及受到影响的设置/任务聊天用例；共享环境服务若有改动，再跑涉及的桌宠回归。原生和打包变更必须 `pnpm package:dir`。不恢复普通 PR 的自动全套 CI。可以扩展已有手动平台验证工作流，tag 的打包步骤校验本功能必要产物。
 
@@ -701,7 +701,7 @@ Renderer 允许的接口限定为：读取能力、查看/修改授权、请求�
 
 ## 19. 一次交付的实施任务清单
 
-以下任务仍按完整验收范围记为 **未完成**。已开始内部实现，逐项已验证范围见 [实施记录](../development/next-action-implementation.md)；不能将内部模块通过测试当成全功能完成。任务可以并行实现，但必须在同一功能分支/集成门禁下验证；正式用户不接触缺学习、缺删除或假跳转的中间态。
+核心用户流程、授权、观察适配、模型队列、真实目标、提示和纠错已接线；以下任务仍需按各自完整验收范围核对，不自动标成全部完成。逐项已验证范围见 [实施记录](../development/next-action-implementation.md)；不能将内部模块通过测试当成全功能完成。任务可以并行实现，但必须在同一功能分支/集成门禁下验证；正式用户不接触缺学习、缺删除或假跳转的中间态。
 
 | ID | 任务与具体产出 | 依赖 | 完成证明 |
 | --- | --- | --- | --- |

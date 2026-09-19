@@ -17,7 +17,11 @@ void app.whenReady().then(async () => {
   registry.register({ target: target('fixture', { label: '测试编辑器' }), available: async () => true,
     open: async () => { opens++; return { state: 'dispatched' } } })
   const preload = join(process.env.NEXT_HINT_TEST_OUT!, 'preload/next-hint.js')
-  const host = new NextActionHintWindow({ registry, preload, pageURL: pathToFileURL(join(process.env.NEXT_HINT_TEST_OUT!, 'renderer/next-hint.html')).href })
+  let nativeArms=0, nativeReleases=0
+  let nativeConfirm:((id:string)=>void)|null=null
+  let nativeId=''
+  const native={capability:{foreground:true,input:true,tab:false,reason:'isolated-test'},arm:async(id:string,_deadline:number,confirm:(id:string)=>void)=>{nativeArms++;nativeConfirm=confirm;nativeId=id;return true},release:()=>{nativeReleases++;nativeConfirm=null}}
+  const host = new NextActionHintWindow({ registry, preload, native, pageURL: pathToFileURL(join(process.env.NEXT_HINT_TEST_OUT!, 'renderer/next-hint.html')).href })
   const main = new BrowserWindow({ width: 860, height: 620, webPreferences: { preload, contextIsolation: true, sandbox: true, nodeIntegration: false } })
   await main.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent('<title>Isolated hint test</title><input aria-label="编辑器" autofocus>'))
   Object.assign(globalThis, { nextHintTest: {
@@ -30,7 +34,10 @@ void app.whenReady().then(async () => {
       return host.present({ target: t, token: id, context: { id, targetId: t.id, targetRevision: t.revision,
         contextRevision: 1, shortcutRevision: 1, validUntil: expires, durationMs, shortcut } }, () => valid)
     },
-    state: () => ({ opens, id, mainFocused: main.isFocused(), windows: BrowserWindow.getAllWindows().map(w => ({ id: w.id, visible: w.isVisible(), focusable: w.isFocusable(), bounds: w.getBounds() })) }),
+    state: () => ({ opens, id, nativeArms, nativeReleases, mainFocused: main.isFocused(), windows: BrowserWindow.getAllWindows().map(w => ({ id: w.id, visible: w.isVisible(), focusable: w.isFocusable(), bounds: w.getBounds() })) }),
+    enableNative(){native.capability.tab=true},
+    input(known:boolean,composing:boolean,lastInputAt:number){host.input({known,composing,lastInputAt})},
+    nativeConfirm(){nativeConfirm?.(nativeId)},
     revoke() { valid = false; registry.invalidate() },
     hideMain() { main.hide() },
     dismiss() { host.dismiss() },

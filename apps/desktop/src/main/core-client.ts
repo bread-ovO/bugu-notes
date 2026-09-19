@@ -1,5 +1,6 @@
 import { utilityProcess, type UtilityProcess } from 'electron'
 import { randomUUID } from 'node:crypto'
+import { ModelQueue } from './model-queue'
 import { modelPurposeSchema } from './model-purpose'
 import type { TaskModelRequest } from '@memo/model'
 import type { CoreReply, HostRequest } from '@memo/contracts'
@@ -7,6 +8,7 @@ export class CoreClient {
   modelHandler?: (
     input: TaskModelRequest,
   ) => Promise<{ content: string; model: string }>
+  private modelQueue = new ModelQueue()
   private modelCalls = new Map<string, AbortController>()
   private child: UtilityProcess | null = null
   private ready = false
@@ -52,7 +54,7 @@ export class CoreClient {
           }
           if (
             !this.modelHandler ||
-            this.modelCalls.size ||
+            this.modelCalls.size >= 25 ||
             !('messages' in message) ||
             !Array.isArray(message.messages) ||
             message.messages.length > 6 ||
@@ -73,8 +75,9 @@ export class CoreClient {
           }
           const controller = new AbortController()
           this.modelCalls.set(id, controller)
-          void this.modelHandler({
-            messages: message.messages,
+          const messages = message.messages
+          const accepted = this.modelQueue.enqueue(purpose as TaskModelRequest['purpose'], controller.signal, async () => { await this.modelHandler!({
+            messages,
             schema,
             purpose: purpose as TaskModelRequest['purpose'],
             signal: controller.signal,
@@ -98,6 +101,8 @@ export class CoreClient {
                 })
             })
             .finally(() => this.modelCalls.delete(id))
+          }, () => { this.modelCalls.delete(id); if (this.child === child) child.postMessage({ kind: 'model.result', id, error: 'MODEL_CANCELLED' }) })
+          if (!accepted) { this.modelCalls.delete(id); child.postMessage({ kind: 'model.result', id, error: 'MODEL_UNAVAILABLE' }) }
           return
         }
       }
@@ -145,6 +150,7 @@ export class CoreClient {
   private flush() {
     for (const c of this.modelCalls.values()) c.abort()
     this.modelCalls.clear()
+    this.modelQueue.clear()
     for (const p of this.pending.values()) {
       clearTimeout(p.timer)
       p.resolve({ ok: false, error: 'CORE_UNAVAILABLE' })

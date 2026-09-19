@@ -18,7 +18,7 @@ test('internal settings save, restart, shortcuts, clear and IPC restrictions', a
     await expect(page.getByRole('heading', { name: '跟进', exact: true })).toBeVisible()
     await page.getByRole('button', { name: '设置', exact: true }).click()
     await page.locator('#settings-next-action > summary').click()
-    await expect(page.getByText('开发预览 · 跨应用观察尚未接入')).toBeVisible()
+    await expect(page.getByText('确认授权范围', {exact:true})).toBeVisible()
     await page.getByRole('switch', { name: '启用事件学习' }).click()
     await page.getByLabel('确认方式', { exact: true }).fill('click')
     await page.getByLabel('展示时长', { exact: true }).selectOption('5000')
@@ -47,23 +47,23 @@ test('internal settings save, restart, shortcuts, clear and IPC restrictions', a
     await expect(page.getByText('学习记录已清除，功能已关闭')).toBeVisible()
     await expect(page.getByRole('switch', { name: '启用事件学习' })).not.toBeChecked()
     expect(await page.evaluate(() => 'require' in window || 'ipcRenderer' in window)).toBe(false)
-    expect(await page.evaluate(() => Object.keys(window.memo.nextAction).sort())).toEqual(['clear', 'configure', 'feedback', 'status', 'undo'])
+    expect(await page.evaluate(() => Object.keys(window.memo.nextAction).sort())).toEqual(['browserRemove','diagnostics','addApplication','browserSetup','choose','clear','configure','dismissSuggestion','enroll','erase','feedback','forgetPreference','inspect','observation','permission','prefer','reclassify','status','undo','workbench'].sort())
   } finally { await close(app); await rm(root, { recursive: true, force: true }) }
 })
 
-test('unfinished feature is hidden and cannot be enabled in ordinary launches', async () => {
+test('ordinary launch exposes functional settings but stays disabled without opt-in', async () => {
   const root = await realpath(await mkdtemp(join(tmpdir(), 'bugu-next-release-gate-')))
   const app = await electron.launch({ executablePath: require('electron'), args: [resolve('apps/desktop/out/main/index.js')], env: { ...env(), MEMO_TEST_USER_DATA: root } })
   try {
     const page = await app.firstWindow()
     await expect(page.getByRole('heading', { name: '跟进', exact: true })).toBeVisible()
     await page.getByRole('button', { name: '设置', exact: true }).click()
-    await expect(page.locator('#settings-next-action')).toHaveCount(0)
-    expect(await page.evaluate(() => window.memo.nextAction.status())).toEqual({ ok: false, error: 'INVALID_REQUEST' })
+    await expect(page.locator('#settings-next-action')).toHaveCount(1)
+    expect(await page.evaluate(() => window.memo.nextAction.status())).toMatchObject({ok:true,data:{settings:{enabled:false}}})
   } finally { await close(app); await rm(root, { recursive: true, force: true }) }
 })
 
-type HintTest = { show(shortcut?: string, durationMs?: number): Promise<boolean>; state(): { opens: number; id: string; mainFocused: boolean; windows: { id: number; visible: boolean; focusable: boolean; bounds: { x: number; y: number; width: number; height: number } }[] }; revoke(): void; hideMain(): void; dismiss(): void }
+type HintTest = { enableNative():void; input(known:boolean,composing:boolean,lastInputAt:number):void; nativeConfirm():void; show(shortcut?: string, durationMs?: number): Promise<boolean>; state(): { opens: number; id: string; nativeArms:number; nativeReleases:number; mainFocused: boolean; windows: { id: number; visible: boolean; focusable: boolean; bounds: { x: number; y: number; width: number; height: number } }[] }; revoke(): void; hideMain(): void; dismiss(): void }
 declare global { var nextHintTest: HintTest }
 async function hintHost() {
   const root = await realpath(await mkdtemp(join(tmpdir(), 'bugu-hint-host-')))
@@ -141,7 +141,7 @@ test('recent choices support specific feedback, undo, and deletion through the r
     await expect(page.getByRole('heading', { name: '跟进', exact: true })).toBeVisible()
     await page.getByRole('button', { name: '设置', exact: true }).click()
     await page.locator('#settings-next-action > summary').click()
-    await page.locator('.next-action-settings summary').click()
+    await page.locator('.next-action-settings summary').filter({hasText:'最近选择'}).click()
     const feedback = page.getByLabel('纠正 codex c1', { exact: true })
     await feedback.selectOption('wrong-target')
     await expect(page.locator('.next-action-feedback')).toContainText('会话不对')
@@ -159,4 +159,40 @@ test('recent choices support specific feedback, undo, and deletion through the r
     await expect(page.getByText('还没有记录', { exact: true })).toBeVisible()
     expect((await page.evaluate(() => window.memo.nextAction.status()))).toMatchObject({ ok: true, data: { eventCount: 0, choiceCount: 0, recent: [] } })
   } finally { await close(app); await rm(root, { recursive: true, force: true }) }
+})
+
+
+test('native Tab lease waits for input to stop, releases before redisplay and only resumes once',async()=>{
+  const {app,main,cleanup}=await hintHost()
+  try{
+    await app.evaluate(()=>{globalThis.nextHintTest.enableNative();globalThis.nextHintTest.input(true,false,Date.now())})
+    expect(await app.evaluate(()=>globalThis.nextHintTest.show('Tab'))).toBe(true)
+    const hint=app.windows().find(p=>p!==main)!
+    expect((await app.evaluate(()=>globalThis.nextHintTest.state())).windows.some(w=>!w.focusable&&w.visible)).toBe(false)
+    await expect(hint.locator('kbd')).toHaveText('Tab')
+    await expect.poll(()=>app.evaluate(()=>globalThis.nextHintTest.state().windows.some(w=>!w.focusable&&w.visible))).toBe(true)
+    const before=await app.evaluate(()=>globalThis.nextHintTest.state())
+    expect(before.mainFocused).toBe(true)
+    await app.evaluate(()=>globalThis.nextHintTest.input(true,false,Date.now()))
+    expect((await app.evaluate(()=>globalThis.nextHintTest.state())).nativeReleases).toBeGreaterThan(before.nativeReleases)
+    expect((await app.evaluate(()=>globalThis.nextHintTest.state())).windows.some(w=>!w.focusable&&w.visible)).toBe(false)
+    await expect.poll(()=>app.evaluate(()=>globalThis.nextHintTest.state().windows.some(w=>!w.focusable&&w.visible))).toBe(true)
+    await app.evaluate(()=>globalThis.nextHintTest.input(true,false,Date.now()))
+    await expect.poll(()=>app.evaluate(()=>globalThis.nextHintTest.state().windows.some(w=>!w.focusable&&w.visible))).toBe(false)
+    await app.evaluate(()=>globalThis.nextHintTest.nativeConfirm())
+    expect((await app.evaluate(()=>globalThis.nextHintTest.state())).opens).toBe(0)
+  }finally{await cleanup()}
+})
+test('native confirmation is one-shot and IME composition cannot arm Tab',async()=>{
+  const {app,main,cleanup}=await hintHost()
+  try{
+    await app.evaluate(()=>{globalThis.nextHintTest.enableNative();globalThis.nextHintTest.input(true,true,Date.now()-5000)})
+    expect(await app.evaluate(()=>globalThis.nextHintTest.show('Tab'))).toBe(true)
+    const hint=app.windows().find(p=>p!==main)!
+    expect((await app.evaluate(()=>globalThis.nextHintTest.state())).nativeArms).toBe(0)
+    await app.evaluate(()=>globalThis.nextHintTest.input(true,false,Date.now()-5000))
+    await expect(hint.locator('kbd')).toHaveText('Tab')
+    await app.evaluate(()=>{globalThis.nextHintTest.nativeConfirm();globalThis.nextHintTest.nativeConfirm()})
+    await expect.poll(()=>app.evaluate(()=>globalThis.nextHintTest.state().opens)).toBe(1)
+  }finally{await cleanup()}
 })

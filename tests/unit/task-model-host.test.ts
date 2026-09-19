@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events'
 import { expect, it, vi } from 'vitest'
-import { taskExtractionSchema, taskChatOutputSchema, nextActionOutputSchema } from '@memo/contracts'
+import { taskExtractionSchema, taskChatOutputSchema, nextActionWireSchema } from '@memo/contracts'
 const { fork } = vi.hoisted(() => ({ fork: vi.fn() }))
 vi.mock('../../apps/desktop/node_modules/electron', () => ({
   utilityProcess: { fork },
@@ -49,7 +49,7 @@ it('the desktop host uses the strict extraction schema and never a schema suppli
     child.emit('message', { kind: 'model.analyze', id: 'next', purpose: 'next-action',
       messages: [{ role: 'user', content: 'synthetic' }], schema: { untrusted: true } })
     await vi.waitFor(() => expect(child.postMessage).toHaveBeenCalledTimes(3))
-    expect(infer.mock.calls[2]?.[0]).toMatchObject({ schema: nextActionOutputSchema, purpose: 'next-action' })
+    expect(infer.mock.calls[2]?.[0]).toMatchObject({ schema: nextActionWireSchema, purpose: 'next-action' })
     child.emit('message', { kind: 'model.analyze', id: 'forged', purpose: 'run-shell', messages: [] })
     expect(infer).toHaveBeenCalledTimes(3)
     expect(child.postMessage).toHaveBeenLastCalledWith({ kind: 'model.result', id: 'forged', error: 'MODEL_INVALID_PURPOSE' })

@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "BUGU 不咕 · 事件桥接",
+  "version": "0.1.0",
+  "description": "将明确授权站点中正在查看的对象标识发送给本机 BUGU；不读取页面正文、Cookie 或浏览历史。",
+  "permissions": ["nativeMessaging", "storage", "scripting"],
+  "optional_host_permissions": [
+    "https://github.com/*",
+    "https://*.feishu.cn/*",
+    "https://*.larksuite.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "options.html"
+  },
+  "options_page": "options.html",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAut5HCaLfa7O178+5+QCGqy1nRzCXTD50JemLTbqcPvp4oBW66DZByFAlDSeGp6lo9yC52tChwjq6NXMj+LCGzD3Z0ReIlo7nTVy8/xLIyfw5MFKqYRW44xq+Rdti6lXJ5NW/CA5EBA0OGzgWSlORRmTJ5LQcQK3prWfQewCebrvfo3BZJ3OqnYAIx5fjJzrTN5DPnnFhuSymwif4c1FEuyiDkXDxd7z+3tLwMGLnM83eFK6uAhd5F6I0zd+syf42CuCXB8Ol62iuzKu/ehWFyalJeZ7lZ1y1DFvV7Lk5lcKCpLEap/AmD37WL+CHpxsDa/OtN2IdFl1xh7b/wCyyqwIDAQAB"
+}
