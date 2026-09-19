@@ -141,6 +141,17 @@ async function main() {
     workflow.handle({ method: 'nextAction.inspect', recordId: fresh.recordId })
     await idle()
     const recommendation = workflow.snapshot().suggestions[0]!
+    assert.equal(workflow.snapshot().observedRecordId, fresh.recordId)
+    workflow.handle({
+      method: 'nextActionHost.page',
+      url: 'https://github.com/unrelated/repo/pull/999',
+      visibility: 'visible-object',
+    })
+    assert.equal(
+      workflow.snapshot().observedRecordId,
+      null,
+      'unmatched page must not bind the previous observed record',
+    )
     assert.ok(recommendation)
     assert.equal(recommendation.targetId, 'app:codex')
     assert.equal(

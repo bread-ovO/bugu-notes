@@ -304,6 +304,7 @@ export function createNextWorkflow(
           break
         }
         case 'nextActionHost.page': {
+          observedRecordId = null
           if (
             !repo.observation().enabled ||
             !store.nextAction.snapshot().settings.enabled

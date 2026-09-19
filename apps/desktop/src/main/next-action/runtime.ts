@@ -34,6 +34,7 @@ export class NextActionRuntime {
   private observing = false
   private foreground = ''
   private foregroundRevision = 0
+  private browserRevision = 0
   private observed = new Map<
     number,
     { revision: number; origin: 'native' | 'explicit' | 'browser' }
@@ -107,6 +108,7 @@ export class NextActionRuntime {
         `next-action-browser-host${process.platform === 'win32' ? '.exe' : ''}`,
       ),
       (url) => {
+        const browserRevision = ++this.browserRevision
         for (const [id, binding] of this.observed)
           if (binding.origin === 'browser') this.observed.delete(id)
         if (
@@ -122,7 +124,11 @@ export class NextActionRuntime {
               visibility: 'visible-object',
             })
             .then((result) => {
-              if (result.ok && revision === this.foregroundRevision) {
+              if (
+                result.ok &&
+                revision === this.foregroundRevision &&
+                browserRevision === this.browserRevision
+              ) {
                 const recordId = (result.data as NextWorkbench).observedRecordId
                 if (recordId)
                   this.observed.set(recordId, { revision, origin: 'browser' })
@@ -222,8 +228,6 @@ export class NextActionRuntime {
           !this.seen.has(x.id),
       )
       if (!suggestion) return
-      if (this.seen.size >= 1000) this.seen.clear()
-      this.seen.add(suggestion.id)
       const event = s.events.find((e) => e.id === suggestion.eventId)
       const target = event?.targets.find((t) => t.id === suggestion.targetId)
       if (
@@ -232,6 +236,8 @@ export class NextActionRuntime {
         this.observed.get(event.recordId)?.revision !== this.foregroundRevision
       )
         return
+      if (this.seen.size >= 1000) this.seen.clear()
+      this.seen.add(suggestion.id)
       const revision = this.foregroundRevision
       const version = s.version
       this.registry.clear()
@@ -350,13 +356,46 @@ export class NextActionRuntime {
     request: Extract<CoreRequest, { method: `nextAction.${string}` }>,
   ): Promise<CoreReply<unknown>> {
     try {
-      if(request.method==='nextAction.browserRemove'){await this.browser.uninstall();this.observed.clear();this.hint.dismiss();return{ok:true,data:await this.read()}}
-      if(request.method==='nextAction.diagnostics'){
-        const state=await this.read(),window=this.options.window();if(!state||!window)throw Error('NEXT_UNAVAILABLE')
-        const result=await dialog.showSaveDialog(window,{title:'导出事件学习诊断',defaultPath:'BUGU-next-action-diagnostics.json',filters:[{name:'JSON',extensions:['json']}]})
-        if(result.canceled||!result.filePath)return{ok:true,data:{saved:false}}
-        await writeFile(result.filePath,JSON.stringify({version:1,platform:process.platform,arch:process.arch,electron:process.versions.electron,capability:this.observer.capability,enabled:state.settings.enabled,proactive:state.settings.proactive,sourceCount:state.sources.filter(s=>s.selected).length,eventCount:state.events.length,suggestionCount:state.suggestions.length,busy:state.busy,error:state.error},null,2),{mode:0o600})
-        return{ok:true,data:{saved:true}}
+      if (request.method === 'nextAction.browserRemove') {
+        await this.browser.uninstall()
+        this.observed.clear()
+        this.hint.dismiss()
+        return { ok: true, data: await this.read() }
+      }
+      if (request.method === 'nextAction.diagnostics') {
+        const state = await this.read(),
+          window = this.options.window()
+        if (!state || !window) throw Error('NEXT_UNAVAILABLE')
+        const result = await dialog.showSaveDialog(window, {
+          title: '导出事件学习诊断',
+          defaultPath: 'BUGU-next-action-diagnostics.json',
+          filters: [{ name: 'JSON', extensions: ['json'] }],
+        })
+        if (result.canceled || !result.filePath)
+          return { ok: true, data: { saved: false } }
+        await writeFile(
+          result.filePath,
+          JSON.stringify(
+            {
+              version: 1,
+              platform: process.platform,
+              arch: process.arch,
+              electron: process.versions.electron,
+              capability: this.observer.capability,
+              enabled: state.settings.enabled,
+              proactive: state.settings.proactive,
+              sourceCount: state.sources.filter((s) => s.selected).length,
+              eventCount: state.events.length,
+              suggestionCount: state.suggestions.length,
+              busy: state.busy,
+              error: state.error,
+            },
+            null,
+            2,
+          ),
+          { mode: 0o600 },
+        )
+        return { ok: true, data: { saved: true } }
       }
       if (request.method === 'nextAction.addApplication')
         return { ok: true, data: await this.addApplication() }
