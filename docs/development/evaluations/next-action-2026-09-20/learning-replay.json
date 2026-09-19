@@ -1,0 +1,1772 @@
+{
+  "synthetic": true,
+  "scope": "Temporal-prefix deterministic learning replay; no live model, launch, user data or held-out human behavior.",
+  "predictionBeforeObservation": true,
+  "note": "Eight designed behavioral streams, not independent samples of production accuracy. The fixed-Codex comparator always answers; coverage differs. Transfer errors during a new project exception are retained.",
+  "streams": [
+    {
+      "name": "stable-independent",
+      "total": 16,
+      "offered": 11,
+      "correct": 11,
+      "precision": 1,
+      "coverage": 0.6875,
+      "fixedCodexCorrect": 16,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "automatic-two-sided",
+      "total": 20,
+      "offered": 10,
+      "correct": 10,
+      "precision": 1,
+      "coverage": 0.5,
+      "fixedCodexCorrect": 0,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 16,
+          "observedPrefix": 16,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 17,
+          "observedPrefix": 17,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 18,
+          "observedPrefix": 18,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 19,
+          "observedPrefix": 19,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "mixed-no-stable-preference",
+      "total": 20,
+      "offered": 0,
+      "correct": 0,
+      "precision": null,
+      "coverage": 0,
+      "fixedCodexCorrect": 10,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 16,
+          "observedPrefix": 16,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 17,
+          "observedPrefix": 17,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 18,
+          "observedPrefix": 18,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 19,
+          "observedPrefix": 19,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "recommendation-self-reinforcement",
+      "total": 20,
+      "offered": 0,
+      "correct": 0,
+      "precision": null,
+      "coverage": 0,
+      "fixedCodexCorrect": 20,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 16,
+          "observedPrefix": 16,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 17,
+          "observedPrefix": 17,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 18,
+          "observedPrefix": 18,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 19,
+          "observedPrefix": 19,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "duplicate-switches",
+      "total": 20,
+      "offered": 0,
+      "correct": 0,
+      "precision": null,
+      "coverage": 0,
+      "fixedCodexCorrect": 20,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 16,
+          "observedPrefix": 16,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 17,
+          "observedPrefix": 17,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 18,
+          "observedPrefix": 18,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 19,
+          "observedPrefix": 19,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "new-event-type",
+      "total": 18,
+      "offered": 8,
+      "correct": 8,
+      "precision": 1,
+      "coverage": 0.4444444444444444,
+      "fixedCodexCorrect": 8,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": null,
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": null,
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": null,
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": null,
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": null,
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": "browser",
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": "browser",
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": "browser",
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 16,
+          "observedPrefix": 16,
+          "predicted": "browser",
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 17,
+          "observedPrefix": 17,
+          "predicted": "browser",
+          "actual": "browser",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "project-exception-and-removal",
+      "total": 18,
+      "offered": 11,
+      "correct": 8,
+      "precision": 0.7272727272727273,
+      "coverage": 0.6111111111111112,
+      "fixedCodexCorrect": 10,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 7,
+          "observedPrefix": 7,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 8,
+          "observedPrefix": 8,
+          "predicted": "codex",
+          "actual": "claude",
+          "scope": "personal",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 9,
+          "observedPrefix": 9,
+          "predicted": "codex",
+          "actual": "claude",
+          "scope": "personal",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 10,
+          "observedPrefix": 10,
+          "predicted": "codex",
+          "actual": "claude",
+          "scope": "personal",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 11,
+          "observedPrefix": 11,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 12,
+          "observedPrefix": 12,
+          "predicted": null,
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 13,
+          "observedPrefix": 13,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 14,
+          "observedPrefix": 14,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 15,
+          "observedPrefix": 15,
+          "predicted": "claude",
+          "actual": "claude",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 16,
+          "observedPrefix": 16,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 17,
+          "observedPrefix": 17,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "personal",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "correction-and-undo",
+      "total": 7,
+      "offered": 1,
+      "correct": 1,
+      "precision": 1,
+      "coverage": 0.14285714285714285,
+      "fixedCodexCorrect": 7,
+      "checksPassed": true,
+      "rows": [
+        {
+          "index": 0,
+          "observedPrefix": 0,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 1,
+          "observedPrefix": 1,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 2,
+          "observedPrefix": 2,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 3,
+          "observedPrefix": 3,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 4,
+          "observedPrefix": 4,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 5,
+          "observedPrefix": 5,
+          "predicted": null,
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        },
+        {
+          "index": 6,
+          "observedPrefix": 6,
+          "predicted": "codex",
+          "actual": "codex",
+          "scope": "project",
+          "checks": {
+            "expectedDecision": true,
+            "noCrossProjectObject": true,
+            "durationInvariant": true
+          }
+        }
+      ]
+    }
+  ]
+}

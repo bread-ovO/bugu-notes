@@ -1,3 +1,4 @@
+import { NextActionRuntime } from './next-action/runtime'
 import { createTaskModelProvider } from './task-model-provider'
 import { initializeBundledPet } from './pet/bundled-demo'
 import { prepareBuiltinDemo } from './builtin-demo'
@@ -99,6 +100,7 @@ const trayHost = {
   },
 }
 // Isolated test data is explicitly opt-in; production never reads this override.
+const nextActionPreview = true
 if (!app.isPackaged && process.env.MEMO_TEST_USER_DATA)
   app.setPath('userData', resolve(process.env.MEMO_TEST_USER_DATA))
 const devURL = !app.isPackaged ? process.env.ELECTRON_RENDERER_URL : undefined
@@ -415,12 +417,22 @@ else {
         () => window,
         vault,
       )
+      const nextActionRuntime = new NextActionRuntime({
+        request: request => core!.request(request), data,
+        nativeDirectory: app.isPackaged ? join(process.resourcesPath, 'app.asar.unpacked/out/native') : join(__dirname, '../native'),
+        extensionDirectory: join(__dirname, '../browser-extension'),
+        pageURL: devURL ? new URL('next-hint.html', devURL).href : 'memo://app/next-hint.html',
+        preload: join(__dirname, '../preload/next-hint.js'), window: () => window,
+      })
+      void nextActionRuntime.start().catch(() => {})
+      app.once('before-quit', () => nextActionRuntime.dispose())
       ipcMain.handle(
         'memo:request',
         createRequestHandler(
           () => window?.webContents ?? null,
           pageURL,
           async (request) => {
+            if (request.method.startsWith('nextAction.')) return nextActionRuntime.handle(request as Extract<import('@memo/contracts').CoreRequest,{method:`nextAction.${string}`}>)
             if (
               request.method === 'pet.voiceState' ||
               request.method === 'pet.configureVoice' ||
@@ -813,7 +825,7 @@ function createWindow() {
     icon: join(__dirname, '../renderer/icon.png'),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      additionalArguments: startupMode ? [`--bugu-mode=${startupMode}`] : [],
+      additionalArguments: [...(startupMode ? [`--bugu-mode=${startupMode}`] : []), ...(nextActionPreview ? ['--bugu-next-action-preview'] : [])],
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,

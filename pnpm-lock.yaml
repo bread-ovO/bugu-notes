@@ -105,7 +105,20 @@ importers:
 
   packages/domain: {}
 
-  packages/model: {}
+  packages/model:
+    dependencies:
+      '@memo/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@memo/next-action':
+        specifier: workspace:*
+        version: link:../next-action
+
+  packages/next-action:
+    dependencies:
+      '@memo/contracts':
+        specifier: workspace:*
+        version: link:../contracts
 
   packages/plugin-host:
     dependencies:
@@ -130,6 +143,9 @@ importers:
       '@memo/domain':
         specifier: workspace:*
         version: link:../domain
+      '@memo/next-action':
+        specifier: workspace:*
+        version: link:../next-action
       better-sqlite3:
         specifier: 13.0.3
         version: 13.0.3

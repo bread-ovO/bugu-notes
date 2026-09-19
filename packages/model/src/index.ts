@@ -12,3 +12,4 @@ export type {
   PetTemplateSelection,
 } from './pet-selector'
 export { runTaskChat } from './task-chat-runner'
+export { analyzeNextAction } from './next-action'

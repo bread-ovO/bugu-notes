@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-20",
+  "platform": "macOS arm64",
+  "browser": "Playwright Chromium 145.0.7632.6 (revision 1208)",
+  "profile": "Disposable isolated profile, no logged-in account; HTTPS work pages fulfilled from synthetic fixtures",
+  "scope": [
+    "Native optional-site permission grant",
+    "Already-open authorized tab requires no reload",
+    "Real Keychain-protected Native Messaging host round trip",
+    "Canonical URL strips query and fragment",
+    "Unpermitted/background tabs produce no object",
+    "Tab return reannounces object",
+    "Desktop bridge restart resumes with stored Keychain pairing",
+    "Permission removal clears context",
+    "Browser restart retains revoked permission"
+  ],
+  "result": "passed",
+  "test": "tests/desktop/next-extension.spec.ts",
+  "seconds": 41.6,
+  "limitations": [
+    "Native permission dialog is interactive; keep the fixture browser focused",
+    "Not Chrome/Edge public-store distribution validation",
+    "Not Windows registry or Linux browser installation acceptance"
+  ]
+}

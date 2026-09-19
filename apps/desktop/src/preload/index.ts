@@ -1,6 +1,29 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { DesktopBridge } from '@memo/contracts'
 const bridge: DesktopBridge = {
+  nextActionPreview: true,
+  nextAction: Object.freeze({
+    browserRemove: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.browserRemove' }),
+    diagnostics: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.diagnostics' }),
+    dismissSuggestion: (id, kind) => ipcRenderer.invoke('memo:request', { method: 'nextAction.dismissSuggestion', id, kind }),
+    forgetPreference: (eventId, scope) => ipcRenderer.invoke('memo:request', { method: 'nextAction.forgetPreference', eventId, scope }),
+    addApplication: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.addApplication' }),
+    workbench: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.workbench' }),
+    enroll: (sourceIds, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.enroll', sourceIds, sendToModel: true, expectedVersion }),
+    inspect: (recordId) => ipcRenderer.invoke('memo:request', { method: 'nextAction.inspect', recordId }),
+    choose: (eventId, targetId, suggestionId) => ipcRenderer.invoke('memo:request', { method: 'nextAction.choose', eventId, targetId, ...(suggestionId ? {suggestionId} : {}) }),
+    prefer: (eventId, toolId, scope) => ipcRenderer.invoke('memo:request', { method: 'nextAction.prefer', eventId, toolId, scope }),
+    reclassify: (eventId, eventType) => ipcRenderer.invoke('memo:request', { method: 'nextAction.reclassify', eventId, eventType }),
+    erase: (scope, id) => ipcRenderer.invoke('memo:request', { method: 'nextAction.erase', scope, id }),
+    observation: (enabled, appIds) => ipcRenderer.invoke('memo:request', { method: 'nextAction.observation', enabled, appIds }),
+    permission: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.permission' }),
+    browserSetup: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.browserSetup' }),
+    status: () => ipcRenderer.invoke('memo:request', { method: 'nextAction.status' }),
+    configure: (settings, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.configure', settings, expectedVersion }),
+    clear: (expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.clear', expectedVersion }),
+    feedback: (choiceId, kind, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.feedback', choiceId, kind, expectedVersion }),
+    undo: (feedbackId, expectedVersion) => ipcRenderer.invoke('memo:request', { method: 'nextAction.undo', feedbackId, expectedVersion }),
+  }),
   platform: ['darwin', 'win32', 'linux'].includes(process.platform)
     ? process.platform as 'darwin' | 'win32' | 'linux'
     : 'other',

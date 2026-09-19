@@ -1,5 +1,11 @@
 # 需求拆解与研发跟踪
 
+## 新增计划：猜你想做（2026-09-18）
+
+[完整实现方案与 NX01–NX26 任务清单](../product/BUGU_猜你想做_完整实现方案.md)对应 [Issue #158](https://github.com/bread-ovO/bugu-notes/issues/158)，全部未完成，按同一功能包验收。包括授权观察、模型编排、习惯学习、可信跳转、界面、删除撤权、真实模型评测与三平台安装验证。本次新增本地方案，尚未同步到飞书多维表，也不改变历史条目完成状态。
+
+## 历史拆解与交付记录
+
 [飞书多维表格](https://my.feishu.cn/base/VHWebJShaa0nhnskizncs3GZnud?table=tblAzOvM7QohTvak)
 
 基于 [PRD v0.3](../product/多信源AI事项助手_PRD_v0.3.md) 和 [技术方案 v0.1](../architecture/多信源AI事项助手_技术方案_v0.1.md)，拆分 80 条需求，覆盖 15 个模块。建表日期：2026-09-12。

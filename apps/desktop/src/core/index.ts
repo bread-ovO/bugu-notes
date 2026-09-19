@@ -1,3 +1,5 @@
+import { createNextWorkflow } from './next-workflow'
+import { createNextActionService } from './next-action-service'
 import { createTaskChatService } from './task-chat'
 import { createTaskModelBridge } from './task-model-bridge'
 import { handleFeishuHost, isFeishuHostRequest } from './feishu'
@@ -8,7 +10,7 @@ import { handleWorkspace } from './workspace'
 import { createLocalProcessing } from './processing'
 import { createTaskAnalysisService } from './task-analysis'
 import { openStore } from '@memo/storage'
-import { parseHostRequest, type CoreReply } from '@memo/contracts'
+import { parseHostRequest, type CoreReply, type HostRequest, type NextWorkflowRequest, type NextHostRequest } from '@memo/contracts'
 const parentPort = (
   process as unknown as {
     parentPort: {
@@ -17,6 +19,7 @@ const parentPort = (
     }
   }
 ).parentPort
+function isNextWorkflow(request: HostRequest): request is NextWorkflowRequest | NextHostRequest { return request.method.startsWith('nextActionHost.') || ['nextAction.browserRemove','nextAction.diagnostics','nextAction.dismissSuggestion','nextAction.forgetPreference','nextAction.addApplication','nextAction.workbench','nextAction.enroll','nextAction.inspect','nextAction.choose','nextAction.prefer','nextAction.reclassify','nextAction.erase','nextAction.observation','nextAction.permission','nextAction.browserSetup'].includes(request.method) }
 const path = process.argv[2]
 if (!path || !parentPort) throw new Error('CORE_STARTUP_INVALID')
 const store = openStore(path)
@@ -25,6 +28,9 @@ const processing = createLocalProcessing(store)
 const modelBridge = createTaskModelBridge(parentPort)
 const analysis = createTaskAnalysisService(store, modelBridge)
 const chat = createTaskChatService(store, modelBridge)
+const nextAction = createNextActionService(store, modelBridge)
+const nextWorkflow = createNextWorkflow(store, nextAction)
+store.nextAction.prune()
 analysis.start()
 parentPort.on('message', async ({ data }) => {
   if (
@@ -42,7 +48,15 @@ parentPort.on('message', async ({ data }) => {
     if (request.method.startsWith('pet.')) throw new Error('INVALID_REQUEST')
     reply = {
       ok: true,
-      data: request.method === 'chat.draft' || request.method === 'chat.status' || request.method === 'chat.send' || request.method === 'chat.confirm' || request.method === 'chat.cancel' || request.method === 'chat.reject'
+      data: request.method === 'nextAction.status' || request.method === 'nextAction.configure' || request.method === 'nextAction.clear' || request.method === 'nextAction.feedback' || request.method === 'nextAction.undo'
+        ? (request.method !== 'nextAction.status' && nextWorkflow.cancel(), nextAction.handle(request))
+        : request.method === 'nextActionHost.target'
+        ? store.nextWorkflow.execution(request.eventId, request.targetId)
+        : request.method === 'nextActionHost.candidates'
+        ? store.nextWorkflow.visibleCandidates()
+        : isNextWorkflow(request)
+        ? nextWorkflow.handle(request)
+        : request.method === 'chat.draft' || request.method === 'chat.status' || request.method === 'chat.send' || request.method === 'chat.confirm' || request.method === 'chat.cancel' || request.method === 'chat.reject'
         ? chat.handle(request)
         : request.method === 'analysis.start' || request.method === 'analysis.status' || request.method === 'analysis.accept'
         ? analysis.handle(request)
@@ -128,12 +142,14 @@ parentPort.on('message', async ({ data }) => {
                             : 'INVALID_REQUEST',
     }
   }
+  store.nextWorkflow.reconcile()
   parentPort.postMessage({ id: data.id, reply })
 })
 process.on('exit', () => {
   processing.dispose()
   analysis.dispose()
   chat.dispose()
+  nextAction.dispose()
   store.close()
 })
 parentPort.postMessage({ ready: true })

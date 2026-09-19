@@ -1,0 +1,31 @@
+{
+  "provider": "codex-cli",
+  "concurrency": 4,
+  "promptSourceSha256": "68a5f8885306b12ee09f3964b20c524d925faea6ae2725b6d7ec483878c05698",
+  "corpusSha256": "ba8bebbb33d925ce6c586810b039a2360285f957ec61ff7491c687c7e5b8070a",
+  "retryCount": 0,
+  "usageAndCost": "Provider CLI does not expose usage to this runner; unknown",
+  "model": "CLI default",
+  "syntheticCases": true,
+  "planned": 360,
+  "executed": 360,
+  "passed": 359,
+  "familyCount": 200,
+  "complete": true,
+  "accuracy": 0.9972222222222222,
+  "modes": {
+    "classify-event": {
+      "total": 80,
+      "passed": 79
+    },
+    "attribute-transition": {
+      "total": 120,
+      "passed": 120
+    },
+    "recommend": {
+      "total": 160,
+      "passed": 160
+    }
+  },
+  "note": "Synthetic fixture results only. Time/ordering variants are correlated and must not be counted as independent evidence of production accuracy."
+}

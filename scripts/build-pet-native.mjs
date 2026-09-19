@@ -1,3 +1,4 @@
+import './build-next-native.mjs'
 import { execFileSync } from 'node:child_process'
 import { mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
