@@ -161,6 +161,7 @@ export class NextActionRuntime {
     } catch {
       /* first run */
     }
+    this.tools = this.tools.slice(-24)
     await this.browser.resume()
     this.timer = setInterval(() => void this.tick(), 1000)
     this.timer.unref()
@@ -357,9 +358,9 @@ export class NextActionRuntime {
   ): Promise<CoreReply<unknown>> {
     try {
       if (request.method === 'nextAction.browserRemove') {
-        await this.browser.uninstall()
         this.observed.clear()
         this.hint.dismiss()
+        await this.browser.uninstall()
         return { ok: true, data: await this.read() }
       }
       if (request.method === 'nextAction.diagnostics') {
@@ -466,8 +467,15 @@ export class NextActionRuntime {
         }
       }
       return reply
-    } catch {
-      return { ok: false, error: 'INVALID_REQUEST' }
+    } catch (error) {
+      return {
+        ok: false,
+        error:
+          error instanceof Error &&
+          error.message === 'NEXT_SECURE_STORAGE_UNAVAILABLE'
+            ? 'NEXT_SECURE_STORAGE_UNAVAILABLE'
+            : 'INVALID_REQUEST',
+      }
     }
   }
   async addApplication() {

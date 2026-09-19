@@ -11,7 +11,11 @@ import { canRecommend } from '@memo/next-action'
 import { event, learning } from '../fixtures/next-action'
 const token = 'a'.repeat(64)
 const frame = (url = 'https://github.com/org/repo/pull/1', key = token) =>
-  JSON.stringify({ token: key, payload: { type: 'visible-object', url } })
+  JSON.stringify({
+    protocolVersion: 1,
+    token: key,
+    payload: { type: 'visible-object', url },
+  })
 describe('browser bridge scope', () => {
   it('accepts exact paired token and https canonical object', () =>
     expect(browserObject(frame(), token)).toBe(
@@ -35,6 +39,7 @@ describe('browser bridge scope', () => {
     expect(
       browserObject(
         JSON.stringify({
+          protocolVersion: 1,
           token,
           payload: {
             type: 'visible-object',
@@ -288,5 +293,25 @@ describe('custom application identities', () => {
     expect(executableTool('/apps/My Editor.exe', 'win32').id).toBe(
       executableTool('/elsewhere/my editor.EXE', 'win32').id,
     )
+  })
+})
+
+import { parseNextSettings, defaultNextActionSettings } from '@memo/contracts'
+describe('retention bounds', () => {
+  it.each([-1, 1, 365, Infinity])(
+    'rejects unbounded contribution retention %s',
+    (days) => {
+      expect(() =>
+        parseNextSettings({
+          ...defaultNextActionSettings,
+          contributionDays: days,
+        }),
+      ).toThrow()
+    },
+  )
+  it('migrates settings without retention fields to bounded defaults', () => {
+    const { historyDays, contributionDays, ...legacy } =
+      defaultNextActionSettings
+    expect(parseNextSettings(legacy)).toEqual(defaultNextActionSettings)
   })
 })

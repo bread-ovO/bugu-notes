@@ -213,6 +213,9 @@ for (const [type, texts] of Object.entries(phrases) as [
           )[tool]!,
         }),
       )
+      // A mail reply cannot be routed to a Feishu-message-only target.
+      const hasSupportedTarget =
+        type !== 'unknown' && !(type === 'reply' && n === 3)
       cases.push({
         id: `recommend-${type}-${n}-${reverse ? 'reverse' : 'normal'}`,
         family: `recommend-${type}-${n}`,
@@ -236,8 +239,8 @@ for (const [type, texts] of Object.entries(phrases) as [
         },
         expected: {
           type,
-          related: type !== 'unknown',
-          targetIds: type === 'unknown' ? [] : [expectedTools[type]],
+          related: hasSupportedTarget,
+          targetIds: hasSupportedTarget ? [expectedTools[type]] : [],
         },
       })
     }

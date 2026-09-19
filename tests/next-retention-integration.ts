@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { openStore } from '@memo/storage'
+import { createNextWorkflowStore } from '../packages/storage/src/next-workflow'
 import { createNextActionStore } from '../packages/storage/src/next-action'
 import { canRecommend, learnedHabit } from '@memo/next-action'
 import { defaultNextActionSettings } from '@memo/contracts'
@@ -126,6 +127,67 @@ try {
   store.prune()
   assert.equal(store.data().events.length, 0)
   assert.equal(store.data().contributions?.length, 0)
+  store.configure(
+    { ...store.state().settings, contributionDays: 90 },
+    version(),
+  )
+  store.grant({ ...grant, sourceId: 'source-b' })
+  store.putEvent(
+    event('linked', { createdAt: now, grantRevision: 3 }),
+    version(),
+  )
+  store.putChoice(
+    choice('linked-choice', 'linked', {
+      createdAt: now,
+      attribution: 'model',
+      confidence: 0.99,
+      evidence: [
+        {
+          id: 'source',
+          revision: 1,
+          sourceId: 'source-a',
+          grantRevision: 3,
+          objectId: 'message-linked',
+          side: 'source',
+        },
+        {
+          id: 'destination',
+          revision: 1,
+          sourceId: 'source-b',
+          grantRevision: 1,
+          objectId: 'destination',
+          side: 'destination',
+        },
+      ],
+    }),
+    version(),
+  )
+  now += 8 * DAY
+  store.prune()
+  assert.equal(store.data().contributions?.length, 1)
+  store.revoke(grant.projectId, grant.accountId, 'source-b')
+  assert.equal(
+    store.data().contributions?.length,
+    0,
+    'destination revocation invalidates retained natural attribution',
+  )
+  for (const id of ['tool-clear', 'project-clear']) {
+    store.putEvent(event(id, { createdAt: now, grantRevision: 3 }), version())
+    store.putChoice(choice(id + '-choice', id, { createdAt: now }), version())
+    now += 8 * DAY
+    store.prune()
+    assert.equal(store.data().contributions?.length, 1)
+    const workflow = createNextWorkflowStore(db, () => now)
+    workflow.erase(
+      id === 'tool-clear' ? 'tool' : 'project',
+      id === 'tool-clear' ? 'codex' : 'project-a',
+    )
+    assert.equal(
+      store.data().contributions?.length,
+      0,
+      'scoped deletion clears retained facts',
+    )
+  }
   store.clear(version())
   assert.equal(
     (

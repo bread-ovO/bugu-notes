@@ -1,6 +1,7 @@
 ;(() => {
   let timer,
-    last = ''
+    last = '',
+    acknowledgedAt = 0
   const schedule = () => {
     clearTimeout(timer)
     if (document.visibilityState !== 'visible' || !document.hasFocus()) return
@@ -10,12 +11,15 @@
         document.visibilityState === 'visible' &&
         document.hasFocus() &&
         location.href === url &&
-        last !== url
+        (last !== url || Date.now() - acknowledgedAt >= 10000)
       ) {
         chrome.runtime
           .sendMessage({ type: 'visible-object', url })
           .then((result) => {
-            if (result?.ok) last = url
+            if (result?.ok) {
+              last = url
+              acknowledgedAt = Date.now()
+            }
           })
           .catch(() => {})
       }
@@ -26,10 +30,14 @@
     clearTimeout(timer)
     last = ''
   })
-  document.addEventListener('visibilitychange', schedule)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') last = ''
+    schedule()
+  })
   addEventListener('popstate', schedule)
   setInterval(() => {
-    if (location.href !== last) schedule()
+    if (location.href !== last || Date.now() - acknowledgedAt >= 10000)
+      schedule()
   }, 2000)
   schedule()
 })()

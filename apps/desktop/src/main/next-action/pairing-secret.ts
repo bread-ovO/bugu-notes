@@ -31,7 +31,7 @@ export async function pairingSecret(
       clearTimeout(timer)
       reject(Error('NEXT_SECURE_STORAGE_UNAVAILABLE'))
     })
-    child.on('exit', (code) => {
+    child.on('close', (code) => {
       clearTimeout(timer)
       const result = output.trim()
       if (

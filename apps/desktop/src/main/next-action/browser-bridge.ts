@@ -1,4 +1,5 @@
 import { pairingSecret } from './pairing-secret'
+import { unlinkSync } from 'node:fs'
 import { createServer, type Server } from 'node:net'
 import { randomBytes, createHash, timingSafeEqual } from 'node:crypto'
 import {
@@ -22,6 +23,7 @@ export function browserObject(line: string, secret: string): string | null {
   try {
     const value = JSON.parse(line)
     if (
+      value.protocolVersion !== 1 ||
       typeof value.token !== 'string' ||
       value.token.length !== 64 ||
       secret.length !== 64 ||
@@ -46,6 +48,8 @@ export function browserObject(line: string, secret: string): string | null {
       !/(^|\.)(feishu\.cn|larksuite\.com)$/.test(url.hostname)
     )
       return null
+    url.search = ''
+    url.hash = ''
     return url.href
   } catch {
     return null
@@ -56,6 +60,12 @@ export class BrowserContextBridge {
   private secret = randomBytes(32).toString('hex')
   private endpoint = ''
   private directory = ''
+  private lifecycle: Promise<unknown> = Promise.resolve()
+  private serialize<T>(work: () => Promise<T>): Promise<T> {
+    const result = this.lifecycle.then(work)
+    this.lifecycle = result.catch(() => {})
+    return result
+  }
   constructor(
     private data: string,
     private assets: string,
@@ -111,7 +121,17 @@ export class BrowserContextBridge {
     })
     if (process.platform !== 'win32') await chmod(this.endpoint, 0o600)
   }
-  async install(): Promise<{ directory: string }> {
+  install(): Promise<{ directory: string }> {
+    return this.serialize(async () => {
+      try {
+        return await this.installInternal()
+      } catch (error) {
+        this.stop()
+        throw error
+      }
+    })
+  }
+  private async installInternal(): Promise<{ directory: string }> {
     await this.start()
     const directory = join(this.directory, 'extension')
     await cp(this.assets, directory, { recursive: true })
@@ -197,7 +217,10 @@ export class BrowserContextBridge {
     )
     return { directory: this.directory }
   }
-  async resume() {
+  resume() {
+    return this.serialize(() => this.resumeInternal())
+  }
+  private async resumeInternal() {
     const file = join(this.directory, 'browser-host.conf')
     try {
       const conf = (await readFile(file, 'utf8')).split('\n')
@@ -205,7 +228,7 @@ export class BrowserContextBridge {
         // Upgrade pre-release plaintext pairing; never keep or accept it if sealing fails.
         this.secret = conf[1]!
         try {
-          await this.install()
+          await this.installInternal()
         } catch {
           await rm(file, { force: true })
           this.stop()
@@ -218,7 +241,7 @@ export class BrowserContextBridge {
         conf[1] ?? '',
       )
       await this.start()
-      if (conf[0] !== this.endpoint) await this.install()
+      if (conf[0] !== this.endpoint) await this.installInternal()
     } catch {
       this.stop()
     }
@@ -229,15 +252,26 @@ export class BrowserContextBridge {
       process.platform === 'win32' ? 'browser-host.exe' : 'browser-host',
     )
   }
-  async uninstall() {
+  uninstall() {
+    return this.serialize(() => this.uninstallInternal())
+  }
+  private async uninstallInternal() {
+    // Revocation must take effect even if the OS credential store is locked.
+    this.stop()
+    this.secret = randomBytes(32).toString('hex')
+    let credentialError: unknown
     const sealed = (
       await readFile(join(this.directory, 'browser-host.conf'), 'utf8').catch(
         () => '',
       )
     ).split('\n')[1]
-    if (sealed && /^(keychain|dpapi|secret):/.test(sealed))
-      await pairingSecret(this.hostPath(), 'forget', sealed)
-    this.stop()
+    if (sealed && /^(keychain|dpapi|secret):/.test(sealed)) {
+      try {
+        await pairingSecret(this.hostPath(), 'forget', sealed)
+      } catch (error) {
+        credentialError = error
+      }
+    }
     if (process.platform === 'win32') {
       for (const browser of ['Google\\Chrome', 'Microsoft\\Edge']) {
         const key = `HKCU\\Software\\${browser}\\NativeMessagingHosts\\dev.bugu.context`
@@ -277,12 +311,18 @@ export class BrowserContextBridge {
     }
     if (this.directory)
       await rm(this.directory, { recursive: true, force: true })
-    this.secret = randomBytes(32).toString('hex')
+    if (credentialError) throw credentialError
   }
   stop() {
     this.server?.close()
     this.server = null
-    if (process.platform !== 'win32' && this.endpoint)
-      void rm(this.endpoint, { force: true })
+    if (process.platform !== 'win32' && this.endpoint) {
+      // Synchronous unlink prevents a late cleanup from deleting a newly resumed socket.
+      try {
+        unlinkSync(this.endpoint)
+      } catch {
+        /* already closed */
+      }
+    }
   }
 }

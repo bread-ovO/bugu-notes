@@ -19,8 +19,8 @@ int main(int argc,char**argv){
  while(std::cin.read(reinterpret_cast<char*>(&size),4)){
   if(size==0||size>4096)return 1;std::string payload(size,'\0');if(!std::cin.read(payload.data(),size))return 1;
   HANDLE h=CreateFileA(pipe.c_str(),GENERIC_WRITE,0,nullptr,OPEN_EXISTING,0,nullptr);if(h==INVALID_HANDLE_VALUE)return 1;
-  std::string message="{\"token\":\""+token+"\",\"payload\":"+payload+"}\n";DWORD written=0;bool ok=WriteFile(h,message.data(),static_cast<DWORD>(message.size()),&written,nullptr);CloseHandle(h);if(!ok||written!=message.size())return 1;
-  std::string reply="{\"ok\":true}";size=static_cast<uint32_t>(reply.size());std::cout.write(reinterpret_cast<char*>(&size),4).write(reply.data(),size).flush();
+  std::string message="{\"protocolVersion\":1,\"token\":\""+token+"\",\"payload\":"+payload+"}\n";DWORD written=0;bool ok=WriteFile(h,message.data(),static_cast<DWORD>(message.size()),&written,nullptr);CloseHandle(h);if(!ok||written!=message.size())return 1;
+  std::string reply="{\"ok\":true,\"protocolVersion\":1}";size=static_cast<uint32_t>(reply.size());std::cout.write(reinterpret_cast<char*>(&size),4).write(reply.data(),size).flush();
  }
  return 0;
 }
@@ -43,8 +43,8 @@ int main(int argc,char**argv){
  while(std::cin.read(reinterpret_cast<char*>(&size),4)){
   if(!size||size>4096)return 1;std::string payload(size,'\0');if(!std::cin.read(payload.data(),size))return 1;
   int fd=socket(AF_UNIX,SOCK_STREAM,0);if(fd<0)return 1;sockaddr_un address{};address.sun_family=AF_UNIX;if(socketPath.size()>=sizeof(address.sun_path)){close(fd);return 1;}std::strcpy(address.sun_path,socketPath.c_str());if(connect(fd,reinterpret_cast<sockaddr*>(&address),sizeof(address))!=0){close(fd);return 1;}
-  std::string data="{\"token\":\""+token+"\",\"payload\":"+payload+"}\n";size_t sent=0;while(sent<data.size()){auto n=write(fd,data.data()+sent,data.size()-sent);if(n<=0){close(fd);return 1;}sent+=n;}close(fd);
-  std::string reply="{\"ok\":true}";size=static_cast<uint32_t>(reply.size());std::cout.write(reinterpret_cast<char*>(&size),4).write(reply.data(),size).flush();
+  std::string data="{\"protocolVersion\":1,\"token\":\""+token+"\",\"payload\":"+payload+"}\n";size_t sent=0;while(sent<data.size()){auto n=write(fd,data.data()+sent,data.size()-sent);if(n<=0){close(fd);return 1;}sent+=n;}close(fd);
+  std::string reply="{\"ok\":true,\"protocolVersion\":1}";size=static_cast<uint32_t>(reply.size());std::cout.write(reinterpret_cast<char*>(&size),4).write(reply.data(),size).flush();
  }
 }
 #endif

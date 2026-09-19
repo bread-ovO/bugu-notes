@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+import { readFile } from 'node:fs/promises'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { analyzeNextAction } from '@memo/model'
@@ -12,14 +14,18 @@ async function main() {
   if (!args.includes('--live'))
     throw Error('LIVE_MODEL_REQUIRES_EXPLICIT_LIVE_FLAG')
   const provider = option('--provider', 'codex-cli') as ModelConfig['provider'],
-    limit = Number(option('--limit', '360'))
+    limit = Number(option('--limit', '360')),
+    concurrency = Number(option('--concurrency', '1'))
   if (
     !['codex-cli', 'claude-cli', 'responses', 'chat-completions'].includes(
       provider,
     ) ||
     !Number.isInteger(limit) ||
     limit < 1 ||
-    limit > 360
+    limit > 360 ||
+    !Number.isInteger(concurrency) ||
+    concurrency < 1 ||
+    concurrency > 4
   )
     throw Error('INVALID_EVAL_ARGUMENT')
   const config: ModelConfig = {
@@ -44,66 +50,104 @@ async function main() {
     mode: string
     passed: boolean
     error?: string
+    prediction?: unknown
     elapsedMs: number
+    expected: unknown
   }> = []
   // Interleave modes so a smoke run covers classification, attribution and recommendation.
   const modes = ['classify-event', 'attribute-transition', 'recommend']
-  const ordered = nextActionEvaluationOrder()
+  const requested = option('--ids').split(',').filter(Boolean)
+  const ordered = nextActionEvaluationOrder().filter(
+    (c) => !requested.length || requested.includes(c.id),
+  )
+  if (requested.some((id) => !ordered.some((c) => c.id === id)))
+    throw Error('UNKNOWN_EVAL_CASE')
+  const planned = Math.min(limit, ordered.length)
   let consecutiveErrors = 0
-  for (const c of ordered.slice(0, limit)) {
-    const started = Date.now()
-    let passed = false,
-      error: string | undefined
-    try {
-      const result = await analyzeNextAction(
-        c.input,
-        (request) =>
-          ['responses', 'chat-completions'].includes(provider)
-            ? callModelApi(config, request, process.env.BUGU_EVAL_API_KEY!)
-            : callModelCli(config, request),
-        AbortSignal.timeout(65000),
+  let cursor = 0
+  let flush = Promise.resolve()
+  async function worker() {
+    while (cursor < planned && consecutiveErrors < 3) {
+      const c = ordered[cursor++]!
+      const started = Date.now()
+      let passed = false,
+        error: string | undefined,
+        prediction: unknown
+      try {
+        const result = await analyzeNextAction(
+          c.input,
+          async (request) => {
+            const response = await (['responses', 'chat-completions'].includes(
+              provider,
+            )
+              ? callModelApi(config, request, process.env.BUGU_EVAL_API_KEY!)
+              : callModelCli(config, request))
+            try {
+              prediction = JSON.parse(response)
+            } catch {
+              /* Invalid JSON remains an explicit validation failure. */
+            }
+            return response
+          },
+          AbortSignal.timeout(65000),
+        )
+        prediction = result
+        passed =
+          result.eventType === c.expected.type &&
+          result.related === c.expected.related &&
+          (!c.expected.targetIds ||
+            (!c.expected.related
+              ? result.targetIds.length === 0
+              : result.targetIds[0] === c.expected.targetIds[0]))
+        consecutiveErrors = 0
+      } catch (e) {
+        error =
+          e instanceof Error && /^[A-Z_]+$/.test(e.message)
+            ? e.message
+            : 'MODEL_OR_VALIDATION_FAILED'
+        consecutiveErrors++
+      }
+      results.push({
+        id: c.id,
+        family: c.family,
+        mode: c.input.mode,
+        passed,
+        ...(error ? { error } : {}),
+        ...(prediction ? { prediction } : {}),
+        elapsedMs: Date.now() - started,
+        expected: c.expected,
+      })
+      flush = flush.then(() =>
+        writeFile(
+          resolve(output, 'results.json'),
+          JSON.stringify(results, null, 2),
+        ),
       )
-      passed =
-        result.eventType === c.expected.type &&
-        result.related === c.expected.related &&
-        (!c.expected.targetIds ||
-          (!c.expected.related
-            ? result.targetIds.length === 0
-            : result.targetIds[0] === c.expected.targetIds[0]))
-      consecutiveErrors = 0
-    } catch (e) {
-      error =
-        e instanceof Error && /^[A-Z_]+$/.test(e.message)
-          ? e.message
-          : 'MODEL_OR_VALIDATION_FAILED'
-      consecutiveErrors++
+      await flush
+      console.log(
+        `${results.length}/${planned} ${c.id}: ${passed ? 'PASS' : (error ?? 'FAIL')}`,
+      )
     }
-    results.push({
-      id: c.id,
-      family: c.family,
-      mode: c.input.mode,
-      passed,
-      ...(error ? { error } : {}),
-      elapsedMs: Date.now() - started,
-    })
-    await writeFile(
-      resolve(output, 'results.json'),
-      JSON.stringify(results, null, 2),
-    )
-    console.log(
-      `${results.length}/${limit} ${c.id}: ${passed ? 'PASS' : (error ?? 'FAIL')}`,
-    )
-    if (consecutiveErrors >= 3) break
   }
+  await Promise.all(Array.from({ length: concurrency }, () => worker()))
   const report = {
     provider,
+    concurrency,
+    promptSourceSha256: createHash('sha256')
+      .update(await readFile(resolve('packages/model/src/next-action.ts')))
+      .digest('hex'),
+    corpusSha256: createHash('sha256')
+      .update(JSON.stringify(ordered.slice(0, planned)))
+      .digest('hex'),
+    retryCount: 0,
+    usageAndCost: 'Provider CLI does not expose usage to this runner; unknown',
     model: config.model || 'CLI default',
     syntheticCases: true,
-    planned: limit,
+    planned,
     executed: results.length,
     passed: results.filter((r) => r.passed).length,
     familyCount: new Set(results.map((r) => r.family)).size,
-    complete: results.length === limit,
+    complete: results.length === planned,
     accuracy: results.filter((r) => r.passed).length / results.length,
     modes: Object.fromEntries(
       modes.map((mode) => {

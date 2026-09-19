@@ -24,7 +24,7 @@
     "package:release": "pnpm --filter @memo/desktop package:release",
     "start:demo": "node scripts/start-desktop.mjs --mode=demo",
     "start:real": "node scripts/start-desktop.mjs --mode=real",
-    "test:next-action": "vitest run tests/unit/next-action-learning.test.ts tests/unit/next-action-model.test.ts tests/unit/next-action-hint.test.ts tests/unit/next-workflow-host.test.ts",
+    "test:next-action": "vitest run tests/unit/next-action-learning.test.ts tests/unit/next-action-model.test.ts tests/unit/next-action-hint.test.ts tests/unit/next-workflow-host.test.ts tests/unit/next-browser-extension.test.ts tests/unit/next-browser-lifecycle.test.ts",
     "test:next-action:e2e": "playwright test tests/desktop/next-action.spec.ts tests/desktop/next-workflow.spec.ts",
     "eval:next-action": "node scripts/eval-next-action.mjs",
     "test:next-action:native": "node scripts/test-next-native.mjs"

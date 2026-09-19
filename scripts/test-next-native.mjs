@@ -94,6 +94,7 @@ try {
   const valid = await run([origin], Buffer.concat([header, payload]))
   assert.equal(valid.code, 0)
   assert.equal(JSON.parse(valid.output.subarray(4).toString()).ok, true)
+  assert.equal(JSON.parse(valid.output.subarray(4).toString()).protocolVersion, 1)
   await new Promise((r) => setTimeout(r, 50))
   assert.equal(JSON.parse(received.trim()).token, secret)
   const before = received

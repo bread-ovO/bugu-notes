@@ -59,9 +59,11 @@ export function NextActionWorkbench({
         await read()
       } else
         setMessage(
-          r.error === 'VERSION_CONFLICT'
-            ? '记录已变化，请重新确认'
-            : '未完成操作，请检查授权、应用或模型设置',
+          r.error === 'NEXT_SECURE_STORAGE_UNAVAILABLE'
+            ? '系统安全存储不可用，浏览器尚未配对。请解锁系统钥匙串或密钥环后重试。'
+            : r.error === 'VERSION_CONFLICT'
+              ? '记录已变化，请重新确认'
+              : '未完成操作，请检查授权、应用或模型设置',
         )
     } catch {
       if (alive.current) setMessage('本地服务暂不可用')
@@ -197,8 +199,28 @@ export function NextActionWorkbench({
             >
               添加应用
             </AppButton>
-            <AppButton disabled={busy} onClick={()=>void run(()=>window.memo.nextAction.browserRemove(),'浏览器桥接已停用，请在浏览器中移除扩展')}>停用浏览器桥接</AppButton>
-            <AppButton disabled={busy} onClick={()=>void run(()=>window.memo.nextAction.diagnostics(),'诊断导出操作已结束')}>导出诊断</AppButton>
+            <AppButton
+              disabled={busy}
+              onClick={() =>
+                void run(
+                  () => window.memo.nextAction.browserRemove(),
+                  '浏览器桥接已停用，请在浏览器中移除扩展',
+                )
+              }
+            >
+              停用浏览器桥接
+            </AppButton>
+            <AppButton
+              disabled={busy}
+              onClick={() =>
+                void run(
+                  () => window.memo.nextAction.diagnostics(),
+                  '诊断导出操作已结束',
+                )
+              }
+            >
+              导出诊断
+            </AppButton>
           </div>
         </>
       )}

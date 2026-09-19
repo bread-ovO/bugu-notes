@@ -1,10 +1,12 @@
 import Foundation
 import Darwin
 import Security
+import LocalAuthentication
 func validToken(_ value:String)->Bool {value.range(of:"^[a-f0-9]{64}$",options:.regularExpression) != nil}
 func secretQuery(_ sealed:String)->[String:Any]? {
  guard sealed.range(of:"^keychain:[A-Fa-f0-9-]{36}$",options:.regularExpression) != nil else{return nil}
- return [kSecClass as String:kSecClassGenericPassword,kSecAttrService as String:"dev.bugu.next-action.pairing",kSecAttrAccount as String:String(sealed.dropFirst(9)),kSecUseAuthenticationUI as String:kSecUseAuthenticationUIFail]
+ let context=LAContext();context.interactionNotAllowed=true
+ return [kSecClass as String:kSecClassGenericPassword,kSecAttrService as String:"dev.bugu.next-action.pairing",kSecAttrAccount as String:String(sealed.dropFirst(9)),kSecUseAuthenticationContext as String:context]
 }
 func unseal(_ sealed:String)->String? {
  guard var query=secretQuery(sealed) else{return nil}
@@ -35,7 +37,7 @@ guard config.count==3,CommandLine.arguments.count>=2,CommandLine.arguments[1]==c
 func exact(_ count:Int)->Data? {var out=Data();while out.count<count {guard let bytes=try? FileHandle.standardInput.read(upToCount:count-out.count), !bytes.isEmpty else {return nil};out.append(bytes)};return out}
 while let header=exact(4){
  let n=header.enumerated().reduce(UInt32(0)){$0 | (UInt32($1.element) << ($1.offset*8))}
- guard n>0,n<=4096,let payload=exact(Int(n)),let value=try? JSONSerialization.jsonObject(with:payload) as? [String:Any],let data=try? JSONSerialization.data(withJSONObject:["token":token,"payload":value]) else {exit(1)}
+ guard n>0,n<=4096,let payload=exact(Int(n)),let value=try? JSONSerialization.jsonObject(with:payload) as? [String:Any],let data=try? JSONSerialization.data(withJSONObject:["protocolVersion":1,"token":token,"payload":value]) else {exit(1)}
  let fd=socket(AF_UNIX,SOCK_STREAM,0);guard fd>=0 else {exit(1)}
  var address=sockaddr_un();address.sun_family=sa_family_t(AF_UNIX)
  let path=Array(config[0].utf8CString);guard path.count<=MemoryLayout.size(ofValue:address.sun_path) else {exit(1)}
@@ -46,6 +48,6 @@ while let header=exact(4){
  var written=0
  let success=message.withUnsafeBytes{p -> Bool in while written<message.count{let n=Darwin.write(fd,p.baseAddress!.advanced(by:written),message.count-written);if n<=0{return false};written+=n};return true}
  close(fd);guard success else{exit(1)}
- let reply=Data("{\"ok\":true}".utf8);var size=UInt32(reply.count).littleEndian
+ let reply=Data("{\"ok\":true,\"protocolVersion\":1}".utf8);var size=UInt32(reply.count).littleEndian
  withUnsafeBytes(of:&size){FileHandle.standardOutput.write(Data($0))};FileHandle.standardOutput.write(reply)
 }

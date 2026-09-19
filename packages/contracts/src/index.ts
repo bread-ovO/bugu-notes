@@ -409,6 +409,7 @@ export type CoreReply<T = Health> =
   | {
       ok: false
       error:
+        | 'NEXT_SECURE_STORAGE_UNAVAILABLE'
         | 'INVALID_REFERENCE_REVIEW'
         | 'REFERENCE_REVIEW_CONFLICT'
         | 'REFERENCE_RETRACTED'
