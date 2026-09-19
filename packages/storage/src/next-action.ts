@@ -14,6 +14,7 @@ import {
   type NextGrant,
   type NextLearningData,
   type NextPreference,
+  type NextContribution,
 } from '@memo/contracts'
 import {
   choiceContribution,
@@ -86,6 +87,7 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
     cachedVersion = version
     cachedData = freeze({
       events: all<NextEvent>('next_action_events'),
+      contributions: all<NextContribution>('next_action_contributions'),
       choices: all<NextChoice>('next_action_choices'),
       feedback: all<NextFeedback>('next_action_feedback'),
       preferences: all<NextPreference>('next_action_preferences'),
@@ -150,6 +152,16 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
         .filter((e) => e.projectId === projectId && e.accountId === accountId)
         .map((e) => e.id),
     )
+    for (const c of d.contributions ?? [])
+      if (
+        c.event.projectId === projectId &&
+        c.event.accountId === accountId &&
+        (c.event.sourceId === sourceId ||
+          c.choice.evidence.some((e) => e.sourceId === sourceId))
+      )
+        db.prepare(
+          'DELETE FROM next_action_contributions WHERE event_id=?',
+        ).run(c.event.id)
     for (const c of d.choices)
       if (
         scoped.has(c.eventId) &&
@@ -158,11 +170,51 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
         db.prepare('DELETE FROM next_action_choices WHERE id=?').run(c.id)
   }
   const prune = db.transaction(() => {
+    const settings = readState().settings
+    const historyDays = settings.historyDays ?? 30
+    const contributionDays = settings.contributionDays ?? 90
+    const d = data()
+    const latest = latestIndependentChoices(d)
+    let archived = 0
+    // Archive only TTL-expired events, never rows removed by consent, correction or capacity limits.
+    for (const event of d.events) {
+      if (event.createdAt >= now() - historyDays * DAY) continue
+      const choice = latest.get(event.id)
+      if (
+        !choice ||
+        contributionDays === 0 ||
+        choice.createdAt + contributionDays * DAY <= now() ||
+        choiceContribution(choice, event, d) <= 0
+      )
+        continue
+      const contribution: NextContribution = {
+        event,
+        choice,
+        expiresAt: choice.createdAt + contributionDays * DAY,
+      }
+      archived += db
+        .prepare(
+          'INSERT OR REPLACE INTO next_action_contributions VALUES(?,?,?,?,?)',
+        )
+        .run(
+          event.id,
+          event.projectId,
+          choice.createdAt,
+          contribution.expiresAt,
+          JSON.stringify(contribution),
+        ).changes
+    }
+    // Shortening retention takes effect immediately; extending it never resurrects deleted facts.
+    const retained = db
+      .prepare(
+        'DELETE FROM next_action_contributions WHERE expires_at<=? OR created_at<=? OR event_id IN (SELECT event_id FROM next_action_contributions ORDER BY created_at DESC,event_id DESC LIMIT -1 OFFSET 5000)',
+      )
+      .run(now(), now() - contributionDays * DAY)
     const result = db
       .prepare(
         'DELETE FROM next_action_events WHERE created_at<? OR id IN (SELECT id FROM next_action_events ORDER BY created_at DESC,id DESC LIMIT -1 OFFSET 5000)',
       )
-      .run(now() - 30 * DAY)
+      .run(now() - historyDays * DAY)
     const choices = db
       .prepare(
         'DELETE FROM next_action_choices WHERE id IN (SELECT id FROM next_action_choices ORDER BY created_at DESC,id DESC LIMIT -1 OFFSET 20000)',
@@ -173,7 +225,14 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
         'DELETE FROM next_action_feedback WHERE id IN (SELECT id FROM next_action_feedback ORDER BY created_at DESC,id DESC LIMIT -1 OFFSET 20000)',
       )
       .run()
-    if (result.changes || choices.changes || feedback.changes) bump()
+    if (
+      archived ||
+      retained.changes ||
+      result.changes ||
+      choices.changes ||
+      feedback.changes
+    )
+      bump()
   })
   return {
     data,
@@ -191,6 +250,7 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
         db.prepare(
           'UPDATE next_action_state SET version=version+1,settings=? WHERE id=1',
         ).run(JSON.stringify(parsed))
+        prune()
         return snapshot()
       })()
     },
@@ -198,7 +258,7 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
       return db.transaction(() => {
         expectVersion(expectedVersion)
         db.exec(
-          'DELETE FROM next_action_events; DELETE FROM next_action_preferences; DELETE FROM next_action_grants;',
+          'DELETE FROM next_action_events; DELETE FROM next_action_contributions; DELETE FROM next_action_preferences; DELETE FROM next_action_grants;',
         )
         db.prepare(
           'UPDATE next_action_state SET version=version+1,settings=? WHERE id=1',
@@ -294,6 +354,9 @@ export function createNextActionStore(db: Database.Database, now = Date.now) {
           event.createdAt,
           JSON.stringify(event),
         )
+        db.prepare(
+          'DELETE FROM next_action_contributions WHERE event_id=?',
+        ).run(event.id)
         bump()
         prune()
       })()

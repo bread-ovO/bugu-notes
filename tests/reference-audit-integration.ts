@@ -179,7 +179,7 @@ try {
   )
   ingest({ ...base, revision: '5', text: 'new change after migration' })
   assert.equal(count(), 2)
-  assert.equal(store.health().schemaVersion, 27)
+  assert.equal(store.health().schemaVersion, 28)
   console.log('Reference conflict audit integration passed')
 } finally {
   db.close()

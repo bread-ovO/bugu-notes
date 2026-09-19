@@ -68,6 +68,8 @@ if (process.platform === 'win32')
       '/O2',
       resolve(root, 'apps/desktop/native/next-action/browser-host.cpp'),
       `/Fe:${resolve(root, 'apps/desktop/out/native/next-action-browser-host.exe')}`,
+      '/link',
+      'crypt32.lib',
     ],
     { stdio: 'inherit', timeout: 120000 },
   )
@@ -78,6 +80,11 @@ if (process.platform === 'linux')
       '-std=c++17',
       '-O2',
       resolve(root, 'apps/desktop/native/next-action/browser-host.cpp'),
+      ...execFileSync('pkg-config', ['--cflags', '--libs', 'libsecret-1'], {
+        encoding: 'utf8',
+      })
+        .trim()
+        .split(/\s+/),
       '-o',
       resolve(root, 'apps/desktop/out/native/next-action-browser-host'),
     ],
@@ -90,4 +97,17 @@ cpSync(
   { recursive: true },
 )
 
-if(process.platform==='linux') execFileSync('c++',['-std=c++17','-O2','-pthread',resolve(root,'apps/desktop/native/next-action/observer-linux.cpp'),'-lX11','-o',output],{stdio:'inherit',timeout:120000})
+if (process.platform === 'linux')
+  execFileSync(
+    'c++',
+    [
+      '-std=c++17',
+      '-O2',
+      '-pthread',
+      resolve(root, 'apps/desktop/native/next-action/observer-linux.cpp'),
+      '-lX11',
+      '-o',
+      output,
+    ],
+    { stdio: 'inherit', timeout: 120000 },
+  )

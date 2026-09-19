@@ -1,3 +1,4 @@
+import { migrateNextContributions } from './next-contributions'
 import { createNextWorkflowStore, migrateNextWorkflow } from './next-workflow'
 import { createNextActionStore, migrateNextAction } from './next-action'
 import { createTaskChat, migrateTaskChat } from './task-chat'
@@ -90,7 +91,7 @@ export function openStore(path: string) {
     db.pragma('synchronous = FULL')
     db.pragma('busy_timeout = 3000')
     const version = db.pragma('user_version', { simple: true }) as number
-    if (version > 27) throw new Error('DATABASE_TOO_NEW')
+    if (version > 28) throw new Error('DATABASE_TOO_NEW')
     if (version < 1)
       db.transaction(() => {
         db.exec(`
@@ -141,6 +142,7 @@ export function openStore(path: string) {
     if (version < 25) migrateAnalysisWindows(db)
     if (version < 26) migrateNextAction(db)
     if (version < 27) migrateNextWorkflow(db)
+    if (version < 28) migrateNextContributions(db)
     const contexts = createEventContexts(db)
     const receive = createEventReceiver(
       db,

@@ -195,6 +195,53 @@ export function NextActionSettingsPanel() {
           保存设置
         </AppButton>
       </div>
+      <details>
+        <summary>保留与清理</summary>
+        <div className="next-action-fields">
+          <label>
+            最近记录
+            <select
+              aria-label="最近记录保留时间"
+              value={draft.historyDays ?? 30}
+              disabled={busy}
+              onChange={(e) =>
+                patch({
+                  historyDays: Number(
+                    e.target.value,
+                  ) as NextActionSettings['historyDays'],
+                })
+              }
+            >
+              <option value={7}>7 天</option>
+              <option value={14}>14 天</option>
+              <option value={30}>30 天</option>
+            </select>
+          </label>
+          <label>
+            习惯贡献
+            <select
+              aria-label="习惯贡献保留时间"
+              value={draft.contributionDays ?? 90}
+              disabled={busy}
+              onChange={(e) =>
+                patch({
+                  contributionDays: Number(
+                    e.target.value,
+                  ) as NextActionSettings['contributionDays'],
+                })
+              }
+            >
+              <option value={0}>不额外保留</option>
+              <option value={30}>30 天</option>
+              <option value={60}>60 天</option>
+              <option value={90}>90 天</option>
+            </select>
+          </label>
+          <HelpTip label="保留时间说明">
+            习惯贡献只保留事件类型、工具选择与可撤销的来源引用，不含正文。缩短期限立即清理，延长期限不会恢复已删除的数据。修改后点击保存设置。
+          </HelpTip>
+        </div>
+      </details>
       <div className="next-action-row">
         <span className="next-action-muted">
           {state.settings.enabled ? '学习中' : '已关闭'} · {state.eventCount}{' '}

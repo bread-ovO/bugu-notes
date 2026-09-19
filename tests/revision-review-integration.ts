@@ -364,7 +364,7 @@ try {
   assert.equal(large.reference.status, 'review_required')
   assert.equal(large.events.length, 1)
   assert.ok(large.nextCursor)
-  assert.equal(db.pragma('user_version', { simple: true }), 27)
+  assert.equal(db.pragma('user_version', { simple: true }), 28)
   migrated.close()
   console.log('revision review integration passed')
 } finally {

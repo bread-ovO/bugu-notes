@@ -1,3 +1,4 @@
+import { pairingSecret } from './pairing-secret'
 import { createServer, type Server } from 'node:net'
 import { randomBytes, createHash, timingSafeEqual } from 'node:crypto'
 import {
@@ -8,6 +9,7 @@ import {
   readFile,
   rm,
   writeFile,
+  rename,
 } from 'node:fs/promises'
 import { join } from 'node:path'
 import { homedir, tmpdir } from 'node:os'
@@ -59,7 +61,9 @@ export class BrowserContextBridge {
     private assets: string,
     private native: string,
     private onPage: (url: string) => void,
-  ) { this.directory = join(data, 'next-action-browser') }
+  ) {
+    this.directory = join(data, 'next-action-browser')
+  }
   async start() {
     if (this.server) return
     this.directory = join(this.data, 'next-action-browser')
@@ -125,11 +129,24 @@ export class BrowserContextBridge {
     )
     await copyFile(this.native, host)
     await chmod(host, 0o700)
-    await writeFile(
-      join(this.directory, 'browser-host.conf'),
-      `${this.endpoint}\n${this.secret}\nchrome-extension://${id}/\n`,
-      { mode: 0o600 },
-    )
+    const configPath = join(this.directory, 'browser-host.conf')
+    const previous = (await readFile(configPath, 'utf8').catch(() => '')).split(
+      '\n',
+    )[1]
+    const sealed = await pairingSecret(host, 'seal', this.secret)
+    try {
+      await writeFile(
+        configPath + '.tmp',
+        `${this.endpoint}\n${sealed}\nchrome-extension://${id}/\n`,
+        { mode: 0o600 },
+      )
+      await rename(configPath + '.tmp', configPath)
+    } catch (error) {
+      await pairingSecret(host, 'forget', sealed).catch(() => {})
+      throw error
+    }
+    if (previous && /^(keychain|dpapi|secret):/.test(previous))
+      await pairingSecret(host, 'forget', previous).catch(() => {})
     const config = {
       name: 'dev.bugu.context',
       description: 'BUGU authorized context bridge',
@@ -181,30 +198,86 @@ export class BrowserContextBridge {
     return { directory: this.directory }
   }
   async resume() {
+    const file = join(this.directory, 'browser-host.conf')
     try {
-      const file = join(this.data, 'next-action-browser/browser-host.conf')
       const conf = (await readFile(file, 'utf8')).split('\n')
-      if (!/^[a-f0-9]{64}$/.test(conf[1] ?? '')) return
-      this.secret = conf[1]!
+      if (/^[a-f0-9]{64}$/.test(conf[1] ?? '')) {
+        // Upgrade pre-release plaintext pairing; never keep or accept it if sealing fails.
+        this.secret = conf[1]!
+        try {
+          await this.install()
+        } catch {
+          await rm(file, { force: true })
+          this.stop()
+        }
+        return
+      }
+      this.secret = await pairingSecret(
+        this.hostPath(),
+        'unseal',
+        conf[1] ?? '',
+      )
       await this.start()
       if (conf[0] !== this.endpoint) await this.install()
     } catch {
-      /* no prior opt-in */
+      this.stop()
     }
   }
-  async uninstall(){
+  private hostPath() {
+    return join(
+      this.directory,
+      process.platform === 'win32' ? 'browser-host.exe' : 'browser-host',
+    )
+  }
+  async uninstall() {
+    const sealed = (
+      await readFile(join(this.directory, 'browser-host.conf'), 'utf8').catch(
+        () => '',
+      )
+    ).split('\n')[1]
+    if (sealed && /^(keychain|dpapi|secret):/.test(sealed))
+      await pairingSecret(this.hostPath(), 'forget', sealed)
     this.stop()
-    if(process.platform==='win32'){
-      for(const browser of ['Google\\Chrome','Microsoft\\Edge']){
-        const key=`HKCU\\Software\\${browser}\\NativeMessagingHosts\\dev.bugu.context`
-        try{const {stdout}=await exec('reg.exe',['query',key,'/ve'],{windowsHide:true,timeout:3000});if(stdout.includes(join(this.directory,'dev.bugu.context.json')))await exec('reg.exe',['delete',key,'/f'],{windowsHide:true,timeout:3000})}catch{/* already removed */}
+    if (process.platform === 'win32') {
+      for (const browser of ['Google\\Chrome', 'Microsoft\\Edge']) {
+        const key = `HKCU\\Software\\${browser}\\NativeMessagingHosts\\dev.bugu.context`
+        try {
+          const { stdout } = await exec('reg.exe', ['query', key, '/ve'], {
+            windowsHide: true,
+            timeout: 3000,
+          })
+          if (stdout.includes(join(this.directory, 'dev.bugu.context.json')))
+            await exec('reg.exe', ['delete', key, '/f'], {
+              windowsHide: true,
+              timeout: 3000,
+            })
+        } catch {
+          /* already removed */
+        }
       }
-    }else{
-      const roots=process.platform==='darwin'?['Google/Chrome','Microsoft Edge'].map(b=>join(homedir(),'Library/Application Support',b)):['google-chrome','microsoft-edge','chromium'].map(b=>join(homedir(),'.config',b))
-      for(const root of roots){const file=join(root,'NativeMessagingHosts/dev.bugu.context.json');try{const m=JSON.parse(await readFile(file,'utf8'));if(m.path===join(this.directory,'browser-host'))await rm(file,{force:true})}catch{/* absent or another profile */}}
+    } else {
+      const roots =
+        process.platform === 'darwin'
+          ? ['Google/Chrome', 'Microsoft Edge'].map((b) =>
+              join(homedir(), 'Library/Application Support', b),
+            )
+          : ['google-chrome', 'microsoft-edge', 'chromium'].map((b) =>
+              join(homedir(), '.config', b),
+            )
+      for (const root of roots) {
+        const file = join(root, 'NativeMessagingHosts/dev.bugu.context.json')
+        try {
+          const m = JSON.parse(await readFile(file, 'utf8'))
+          if (m.path === join(this.directory, 'browser-host'))
+            await rm(file, { force: true })
+        } catch {
+          /* absent or another profile */
+        }
+      }
     }
-    if(this.directory)await rm(this.directory,{recursive:true,force:true})
-    this.secret=randomBytes(32).toString('hex')
+    if (this.directory)
+      await rm(this.directory, { recursive: true, force: true })
+    this.secret = randomBytes(32).toString('hex')
   }
   stop() {
     this.server?.close()

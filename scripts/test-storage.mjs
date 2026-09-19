@@ -6,6 +6,7 @@ const require = createRequire(resolve('apps/desktop/package.json'))
 const selected = process.argv.slice(2)
 const names = [
   'next-action-integration',
+  'next-retention-integration',
   'next-workflow-integration',
   'ten-closeout-integration',
   'model-task-closeout-integration',

@@ -236,7 +236,7 @@ try {
   )
   prior.close()
   store = openStore(path)
-  assert.equal(store.health().schemaVersion, 27)
+  assert.equal(store.health().schemaVersion, 28)
   assert.equal(store.health().eventCount, 3)
   assert.deepEqual(store.sources.list(), [])
   store.close()

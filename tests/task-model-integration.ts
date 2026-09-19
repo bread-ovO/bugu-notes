@@ -48,7 +48,7 @@ try {
   legacy.close()
   store = openStore(path)
   const tasks = store.tasks
-  assert.equal(store.health().schemaVersion, 27)
+  assert.equal(store.health().schemaVersion, 28)
   assert.equal(store.health().eventCount, 2)
   assert.equal(store.health().jobCount, 2)
   assert.equal(store.cursor('fixture'), 'cursor')
@@ -412,7 +412,7 @@ try {
   ).n
   v3.close()
   store = openStore(path)
-  assert.equal(store.health().schemaVersion, 27)
+  assert.equal(store.health().schemaVersion, 28)
   assert.equal(store.tasks.get('alpha', 't1')?.dueAt, null)
   assert.equal(store.tasks.getCriteria('alpha', 't1').version, 2)
   assert.equal(store.tasks.listPage({ query: '新标题' }).items[0]?.id, 't1')

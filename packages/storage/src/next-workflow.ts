@@ -102,11 +102,20 @@ export function createNextWorkflowStore(db: Database.Database, now = Date.now) {
         AND COALESCE(e.operation,'upsert')!='retract' AND NOT EXISTS(SELECT 1 FROM source_events n WHERE n.source_id=e.source_id AND n.external_id=e.external_id AND n.id>e.id))`,
       )
       .run()
-    if (invalid.changes) bump()
+    const staleContributions = db
+      .prepare(
+        `DELETE FROM next_action_contributions WHERE
+      json_extract(payload,'$.event.sourceId') IN (SELECT source_id FROM next_action_scopes) AND (
+        NOT EXISTS(SELECT 1 FROM source_events e WHERE e.id=json_extract(next_action_contributions.payload,'$.event.revision') AND e.source_id=json_extract(next_action_contributions.payload,'$.event.sourceId') AND e.external_id=json_extract(next_action_contributions.payload,'$.event.objectId') AND COALESCE(e.operation,'upsert')!='retract' AND NOT EXISTS(SELECT 1 FROM source_events n WHERE n.source_id=e.source_id AND n.external_id=e.external_id AND n.id>e.id))
+        OR EXISTS(SELECT 1 FROM json_each(next_action_contributions.payload,'$.choice.evidence') r WHERE NOT EXISTS(SELECT 1 FROM source_events e WHERE e.id=json_extract(r.value,'$.revision') AND e.source_id=json_extract(r.value,'$.sourceId') AND e.external_id=json_extract(r.value,'$.objectId') AND COALESCE(e.operation,'upsert')!='retract' AND NOT EXISTS(SELECT 1 FROM source_events n WHERE n.source_id=e.source_id AND n.external_id=e.external_id AND n.id>e.id)))
+      )`,
+      )
+      .run()
+    if (invalid.changes || staleContributions.changes) bump()
     learning.prune()
     db.prepare(
       'DELETE FROM next_action_suggestions WHERE created_at<? OR id IN (SELECT id FROM next_action_suggestions ORDER BY created_at DESC LIMIT -1 OFFSET 20)',
-    ).run(now() - 30 * 86400000)
+    ).run(now() - (learning.state().settings.historyDays ?? 30) * 86400000)
   }
   const selectedSource = (id: string) => {
     const s = sourceRows().find((s) => s.id === id && s.selected)
@@ -555,6 +564,9 @@ export function createNextWorkflowStore(db: Database.Database, now = Date.now) {
             )
           }
         } else {
+          db.prepare(
+            "DELETE FROM next_action_contributions WHERE json_extract(payload,'$.choice.toolId')=?",
+          ).run(id)
           for (const c of learning
             .data()
             .choices.filter((c) => c.toolId === id))

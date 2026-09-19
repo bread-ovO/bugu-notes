@@ -1,3 +1,4 @@
+#include "pairing-secret.h"
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -9,8 +10,9 @@
 #include <io.h>
 #include <fcntl.h>
 int main(int argc,char**argv){
+ int command=pairing::command(argc,argv);if(command>=0)return command;
  wchar_t path[32768];GetModuleFileNameW(nullptr,path,32768);std::wstring file(path);file=file.substr(0,file.find_last_of(L"\\/"))+L"\\browser-host.conf";
- std::ifstream cfg{std::filesystem::path(file)};std::string pipe,token,origin;std::getline(cfg,pipe);std::getline(cfg,token);std::getline(cfg,origin);
+ std::ifstream cfg{std::filesystem::path(file)};std::string pipe,token,origin;std::getline(cfg,pipe);std::getline(cfg,token);std::getline(cfg,origin);token=pairing::unseal(token);
  if(argc<2||origin!=argv[1]||token.size()!=64)return 1;
  _setmode(_fileno(stdin),_O_BINARY);_setmode(_fileno(stdout),_O_BINARY);
  uint32_t size;
@@ -33,8 +35,9 @@ int main(int argc,char**argv){
 #include <cstdint>
 #include <cstring>
 int main(int argc,char**argv){
+ int command=pairing::command(argc,argv);if(command>=0)return command;
  char executable[4096];auto len=readlink("/proc/self/exe",executable,sizeof(executable)-1);if(len<0)return 1;executable[len]=0;
- std::string path(executable);std::ifstream cfg(path.substr(0,path.find_last_of('/'))+"/browser-host.conf");std::string socketPath,token,origin;std::getline(cfg,socketPath);std::getline(cfg,token);std::getline(cfg,origin);
+ std::string path(executable);std::ifstream cfg(path.substr(0,path.find_last_of('/'))+"/browser-host.conf");std::string socketPath,token,origin;std::getline(cfg,socketPath);std::getline(cfg,token);std::getline(cfg,origin);token=pairing::unseal(token);
  if(argc<2||origin!=argv[1]||token.size()!=64)return 1;
  uint32_t size;
  while(std::cin.read(reinterpret_cast<char*>(&size),4)){

@@ -11,6 +11,8 @@ import { join, resolve } from 'node:path'
 import { createServer } from 'node:net'
 import assert from 'node:assert/strict'
 const root = mkdtempSync(join(tmpdir(), 'bugu-native-'))
+let sealed = '',
+  sealedHost = ''
 try {
   const ext = process.platform === 'win32' ? '.exe' : ''
   if (true) {
@@ -36,9 +38,25 @@ try {
   chmodSync(host, 0o700)
   const secret = 'b'.repeat(64),
     origin = `chrome-extension://${'a'.repeat(32)}/`
+  sealedHost = host
+  sealed = execFileSync(host, ['--seal'], {
+    input: secret + '\n',
+    encoding: 'utf8',
+    timeout: 15000,
+  }).trim()
+  assert.match(sealed, /^(keychain|dpapi|secret):/)
+  assert.ok(!sealed.includes(secret), 'config never contains the bearer token')
+  assert.equal(
+    execFileSync(host, ['--unseal'], {
+      input: sealed + '\n',
+      encoding: 'utf8',
+      timeout: 15000,
+    }).trim(),
+    secret,
+  )
   writeFileSync(
     join(root, 'browser-host.conf'),
-    `${endpoint}\n${secret}\n${origin}\n`,
+    `${endpoint}\n${sealed}\n${origin}\n`,
     { mode: 0o600 },
   )
   let received = ''
@@ -97,5 +115,10 @@ try {
     'Native helper and native-messaging protocol passed (isolated frames; no user data or keyboard interception).',
   )
 } finally {
+  if (sealed)
+    execFileSync(sealedHost, ['--forget'], {
+      input: sealed + '\n',
+      timeout: 15000,
+    })
   rmSync(root, { recursive: true, force: true })
 }
