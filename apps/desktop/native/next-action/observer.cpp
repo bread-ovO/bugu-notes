@@ -30,9 +30,15 @@ std::string appIdentity;
 std::string unhex(const std::string& value){std::string out;if(value.size()%2)return out;for(size_t i=0;i<value.size();i+=2){auto pair=value.substr(i,2);if(pair.find_first_not_of("0123456789abcdef")!=std::string::npos)return "";out+=static_cast<char>(std::stoi(pair,nullptr,16));}return out;}
 std::wstring wide(const std::string& value){int n=MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,value.data(),static_cast<int>(value.size()),nullptr,0);if(n<=0)return L"";std::wstring out(n,L'\0');MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,value.data(),static_cast<int>(value.size()),out.data(),n);return out;}
 std::wstring normalized(const std::wstring& value){std::wstring out;bool space=false;for(auto c:value){if(iswspace(c)){space=!out.empty();}else{if(space)out+=L' ';out+=c;space=false;}}return out;}
+// CUIAutomation8 exposes bounded provider calls; legacy CUIAutomation does not guarantee IUIAutomation2.
+IUIAutomation2* createAutomation(){
+ IUIAutomation2* uia=nullptr;
+ if(FAILED(CoCreateInstance(CLSID_CUIAutomation8,nullptr,CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&uia))))return nullptr;
+ if(FAILED(uia->put_ConnectionTimeout(100))||FAILED(uia->put_TransactionTimeout(100))){uia->Release();return nullptr;}
+ return uia;
+}
 void observeVisible(){
- CoInitializeEx(nullptr,COINIT_MULTITHREADED);IUIAutomation* uia=nullptr;if(FAILED(CoCreateInstance(CLSID_CUIAutomation,nullptr,CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&uia))))return;
- IUIAutomation2* uia2=nullptr;if(SUCCEEDED(uia->QueryInterface(IID_PPV_ARGS(&uia2)))){uia2->put_ConnectionTimeout(100);uia2->put_TransactionTimeout(100);uia2->Release();}
+ CoInitializeEx(nullptr,COINIT_MULTITHREADED);auto uia=createAutomation();if(!uia){CoUninitialize();return;}
  IUIAutomationTreeWalker* walker=nullptr;if(FAILED(uia->get_ControlViewWalker(&walker))){uia->Release();return;}
  std::map<long long,double> since;std::set<long long> emitted;HWND scannedWindow=nullptr;unsigned long scannedRevision=0;
  while(true){Sleep(1000);std::vector<Candidate> active;HWND window;unsigned long revision;std::string scannedApp;{std::lock_guard<std::mutex> lock(guard);window=GetForegroundWindow();if(window!=previous)continue;scannedApp=appIdentity;revision=watchRevision;for(auto c:candidates)if(c.app==scannedApp)active.push_back(c);}
@@ -93,7 +99,11 @@ void CALLBACK tick(HWND,UINT,UINT_PTR,DWORD){
 int main(int argc,char**argv){
  if(argc>1&&std::string(argv[1])=="--self-test"){
   if(unhex("4142")!="AB"||!unhex("zz").empty()||normalized(L" A \n B ")!=L"A B")return 1;
-  send("{\"selfTest\":true,\"platform\":\"win32\",\"observedUserData\":false}");return 0;
+  if(FAILED(CoInitializeEx(nullptr,COINIT_MULTITHREADED)))return 2;
+  auto uia=createAutomation();if(!uia)return 3;DWORD connection=0,transaction=0;
+  bool bounded=SUCCEEDED(uia->get_ConnectionTimeout(&connection))&&SUCCEEDED(uia->get_TransactionTimeout(&transaction))&&connection==100&&transaction==100;
+  uia->Release();CoUninitialize();if(!bounded)return 4;
+  send("{\"selfTest\":true,\"platform\":\"win32\",\"observedUserData\":false,\"boundedUia\":true}");return 0;
  }
  lastInput=now();hook=SetWindowsHookExW(WH_KEYBOARD_LL,keyboard,GetModuleHandleW(nullptr),0);
  send(std::string("{\"type\":\"capability\",\"foreground\":true,\"input\":")+(hook?"true":"false")+",\"tab\":"+(hook?"true":"false")+",\"reason\":\"IME active: click only\"}");
