@@ -58,7 +58,7 @@ ERD 入口沿用此前创建的「技术方案」，尚无单独命名的 ERD �
 
 学习「遇到什么事，你真实选择什么工具」，授权后由模型识别事件、核对两侧依据；不按停留时长猜测。达到同类独立选择门槛后，在工作区左上角显示短提示，可用 Tab、自定义组合键或点击打开，输入时避让，不依赖桌宠。支持最近建议、分层纠错、撤销、按来源/项目/应用删除和最长 90 天的可撤销习惯贡献。
 
-默认关闭，从「设置 → 猜你想做」授权开启。浏览器商店分发、签名、各系统输入法/权限实机验收尚未完成；未可靠识别具体对象时只打开应用。见 [使用说明](docs/product/BUGU_猜你想做_使用说明.md)、[实现与验证](docs/development/next-action-implementation.md)、[真实模型评测](docs/development/evaluations/next-action-2026-09-19/README.md)。
+默认关闭，从「设置 → 猜你想做」授权开启。浏览器商店分发、签名、各系统输入法/权限实机验收尚未完成；未可靠识别具体对象时只打开应用。见 [使用说明](docs/product/BUGU_猜你想做_使用说明.md)、[实现与验证](docs/development/next-action-implementation.md)、[真实模型评测与补充验收](docs/development/evaluations/next-action-2026-09-20/README.md)。
 
 ## 当前能力
 

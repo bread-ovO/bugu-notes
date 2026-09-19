@@ -22,6 +22,7 @@ test('bounded workbench soak: stable resources and no background model amplifica
     windows: number
   }> = []
   const started = Date.now()
+  let maxSamplingGapMs = 0
   const checkpoint = async () => {
     await mkdir(dirname(reportPath), { recursive: true })
     await writeFile(
@@ -33,6 +34,7 @@ test('bounded workbench soak: stable resources and no background model amplifica
           updatedAt: new Date().toISOString(),
           requestedSeconds: seconds,
           observedMs: Date.now() - started,
+          maxSamplingGapMs,
           scope:
             'isolated immutable renderer/preload/runtime/core/SQLite snapshot; model and app launch fixtures; no system observation permission',
           samples,
@@ -83,7 +85,15 @@ test('bounded workbench soak: stable resources and no background model amplifica
         modelCalls: metrics.modelCalls,
         windows: metrics.windows,
       })
+      if (samples.length > 1) {
+        maxSamplingGapMs = Math.max(
+          maxSamplingGapMs,
+          samples.at(-1)!.elapsedMs - samples.at(-2)!.elapsedMs,
+        )
+      }
       if (samples.length === 1 || samples.length % 6 === 0) await checkpoint()
+      // Sleeping overnight is not 24 hours of observed stability.
+      expect(maxSamplingGapMs).toBeLessThan(60000)
       expect(metrics.modelCalls).toBe(baseline)
       expect(metrics.windows).toBe(1)
       expect(latencyMs).toBeLessThan(5000)
@@ -93,6 +103,9 @@ test('bounded workbench soak: stable resources and no background model amplifica
     }
     // A coarse leak bound, not a claim that all transient RSS has been reclaimed.
     expect(samples.at(-1)!.rssKiB - samples[0]!.rssKiB).toBeLessThan(256 * 1024)
+    expect(samples.at(-1)!.elapsedMs - samples[0]!.elapsedMs).toBeGreaterThan(
+      seconds * 1000 - 20000,
+    )
     outcome = 'passed'
   } catch (error) {
     outcome = 'failed'

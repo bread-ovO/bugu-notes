@@ -1,0 +1,1452 @@
+{
+  "outcome": "running",
+  "startedAt": "2026-09-19T16:29:35.513Z",
+  "updatedAt": "2026-09-19T16:59:38.867Z",
+  "requestedSeconds": 86400,
+  "observedMs": 1803354,
+  "scope": "isolated immutable renderer/preload/runtime/core/SQLite snapshot; model and app launch fixtures; no system observation permission",
+  "samples": [
+    {
+      "elapsedMs": 750,
+      "rssKiB": 653872,
+      "cpuPercent": 0,
+      "latencyMs": 52,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 10803,
+      "rssKiB": 616704,
+      "cpuPercent": 0.455316632631795,
+      "latencyMs": 50,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 20878,
+      "rssKiB": 558368,
+      "cpuPercent": 0.3504870513624463,
+      "latencyMs": 70,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 30942,
+      "rssKiB": 547296,
+      "cpuPercent": 0.5386056358687641,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 41031,
+      "rssKiB": 553600,
+      "cpuPercent": 0.517351036377538,
+      "latencyMs": 82,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 51119,
+      "rssKiB": 538928,
+      "cpuPercent": 0.47193795871616084,
+      "latencyMs": 84,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 61186,
+      "rssKiB": 518720,
+      "cpuPercent": 0.44165147196213983,
+      "latencyMs": 59,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 71254,
+      "rssKiB": 514288,
+      "cpuPercent": 0.34903756212987647,
+      "latencyMs": 64,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 81339,
+      "rssKiB": 481024,
+      "cpuPercent": 0.46707860001038637,
+      "latencyMs": 77,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 91416,
+      "rssKiB": 502640,
+      "cpuPercent": 0.5353227234069164,
+      "latencyMs": 73,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 101471,
+      "rssKiB": 497792,
+      "cpuPercent": 0.38578680633703444,
+      "latencyMs": 48,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 111526,
+      "rssKiB": 510272,
+      "cpuPercent": 0.4410400821372937,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 121608,
+      "rssKiB": 514384,
+      "cpuPercent": 0.4759812340801354,
+      "latencyMs": 78,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 131669,
+      "rssKiB": 415632,
+      "cpuPercent": 0.39148004411325293,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 141742,
+      "rssKiB": 346128,
+      "cpuPercent": 0.3691387996051516,
+      "latencyMs": 69,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 151821,
+      "rssKiB": 366464,
+      "cpuPercent": 0.43774456493333697,
+      "latencyMs": 74,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 161892,
+      "rssKiB": 375168,
+      "cpuPercent": 0.4035489866421839,
+      "latencyMs": 67,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 171949,
+      "rssKiB": 379232,
+      "cpuPercent": 0.41563960527522786,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 182002,
+      "rssKiB": 395712,
+      "cpuPercent": 0.44144533695261795,
+      "latencyMs": 48,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 192081,
+      "rssKiB": 405152,
+      "cpuPercent": 0.3574815577218803,
+      "latencyMs": 76,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 202153,
+      "rssKiB": 387104,
+      "cpuPercent": 0.4114460919021272,
+      "latencyMs": 68,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 212243,
+      "rssKiB": 394912,
+      "cpuPercent": 0.42434669508140327,
+      "latencyMs": 87,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 222331,
+      "rssKiB": 383200,
+      "cpuPercent": 0.39135901801036643,
+      "latencyMs": 83,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 232399,
+      "rssKiB": 396656,
+      "cpuPercent": 0.43905947790304056,
+      "latencyMs": 63,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 242471,
+      "rssKiB": 405056,
+      "cpuPercent": 0.4275797061754326,
+      "latencyMs": 67,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 252555,
+      "rssKiB": 406016,
+      "cpuPercent": 0.37233862234431725,
+      "latencyMs": 80,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 262623,
+      "rssKiB": 409056,
+      "cpuPercent": 0.41006962347944464,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 272713,
+      "rssKiB": 410880,
+      "cpuPercent": 0.47601851757753655,
+      "latencyMs": 87,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 282789,
+      "rssKiB": 412512,
+      "cpuPercent": 0.3786669943402692,
+      "latencyMs": 73,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 292862,
+      "rssKiB": 379936,
+      "cpuPercent": 0.35600540095230704,
+      "latencyMs": 65,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 302927,
+      "rssKiB": 359760,
+      "cpuPercent": 0.3149629880764777,
+      "latencyMs": 60,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 312999,
+      "rssKiB": 372864,
+      "cpuPercent": 0.29709074967999316,
+      "latencyMs": 69,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 323060,
+      "rssKiB": 382768,
+      "cpuPercent": 0.31336548325400726,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 333146,
+      "rssKiB": 384800,
+      "cpuPercent": 0.3544226432493612,
+      "latencyMs": 80,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 343218,
+      "rssKiB": 395552,
+      "cpuPercent": 0.368836730231197,
+      "latencyMs": 68,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 353287,
+      "rssKiB": 396560,
+      "cpuPercent": 0.37417654564017233,
+      "latencyMs": 65,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 363354,
+      "rssKiB": 393280,
+      "cpuPercent": 0.39685032899852263,
+      "latencyMs": 60,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 373442,
+      "rssKiB": 352048,
+      "cpuPercent": 0.34530538511912845,
+      "latencyMs": 78,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 383510,
+      "rssKiB": 359056,
+      "cpuPercent": 0.3804151325212282,
+      "latencyMs": 63,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 393578,
+      "rssKiB": 356256,
+      "cpuPercent": 0.2998363753739187,
+      "latencyMs": 63,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 403651,
+      "rssKiB": 355536,
+      "cpuPercent": 0.32670164542574676,
+      "latencyMs": 68,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 413722,
+      "rssKiB": 364496,
+      "cpuPercent": 0.4123599966899975,
+      "latencyMs": 67,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 423796,
+      "rssKiB": 345712,
+      "cpuPercent": 0.30199239885296797,
+      "latencyMs": 69,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 433865,
+      "rssKiB": 338944,
+      "cpuPercent": 0.2849261604161033,
+      "latencyMs": 65,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 443925,
+      "rssKiB": 362736,
+      "cpuPercent": 0.4423074017831913,
+      "latencyMs": 56,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 453989,
+      "rssKiB": 372960,
+      "cpuPercent": 0.39741792081102356,
+      "latencyMs": 60,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 464063,
+      "rssKiB": 376896,
+      "cpuPercent": 0.41296331147871307,
+      "latencyMs": 70,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 474150,
+      "rssKiB": 381872,
+      "cpuPercent": 0.43234594256510817,
+      "latencyMs": 84,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 484222,
+      "rssKiB": 378560,
+      "cpuPercent": 0.3957275751388637,
+      "latencyMs": 68,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 494280,
+      "rssKiB": 339184,
+      "cpuPercent": 0.2887544476211427,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 504342,
+      "rssKiB": 349792,
+      "cpuPercent": 0.36073578083402624,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 514416,
+      "rssKiB": 368208,
+      "cpuPercent": 0.3808555483276391,
+      "latencyMs": 69,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 524499,
+      "rssKiB": 366608,
+      "cpuPercent": 0.3324805074526931,
+      "latencyMs": 77,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 534564,
+      "rssKiB": 366896,
+      "cpuPercent": 0.42522752959697957,
+      "latencyMs": 61,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 544621,
+      "rssKiB": 376816,
+      "cpuPercent": 0.34359244270493144,
+      "latencyMs": 52,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 554694,
+      "rssKiB": 387360,
+      "cpuPercent": 0.4221733542594135,
+      "latencyMs": 68,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 564748,
+      "rssKiB": 394032,
+      "cpuPercent": 0.4090552756971787,
+      "latencyMs": 52,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 574811,
+      "rssKiB": 374848,
+      "cpuPercent": 0.3501748844882575,
+      "latencyMs": 59,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 584874,
+      "rssKiB": 360784,
+      "cpuPercent": 0.21851234169003847,
+      "latencyMs": 58,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 594928,
+      "rssKiB": 359824,
+      "cpuPercent": 0.23874306496165987,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 604989,
+      "rssKiB": 365248,
+      "cpuPercent": 0.22290179219709477,
+      "latencyMs": 58,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 615046,
+      "rssKiB": 369616,
+      "cpuPercent": 0.1898053593507423,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 625115,
+      "rssKiB": 351024,
+      "cpuPercent": 0.2428765561840316,
+      "latencyMs": 64,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 635205,
+      "rssKiB": 345600,
+      "cpuPercent": 0.28215194102465674,
+      "latencyMs": 86,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 645286,
+      "rssKiB": 352144,
+      "cpuPercent": 0.29709879941212347,
+      "latencyMs": 76,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 655374,
+      "rssKiB": 363728,
+      "cpuPercent": 0.3328736228173548,
+      "latencyMs": 78,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 665456,
+      "rssKiB": 366048,
+      "cpuPercent": 0.3746997600391807,
+      "latencyMs": 73,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 675520,
+      "rssKiB": 369840,
+      "cpuPercent": 0.33803463829537744,
+      "latencyMs": 61,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 685584,
+      "rssKiB": 368992,
+      "cpuPercent": 0.3839309901543938,
+      "latencyMs": 61,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 695660,
+      "rssKiB": 366096,
+      "cpuPercent": 0.3877669161076369,
+      "latencyMs": 72,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 705730,
+      "rssKiB": 367744,
+      "cpuPercent": 0.3441882449615065,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 715799,
+      "rssKiB": 370896,
+      "cpuPercent": 0.3516981373524368,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 725875,
+      "rssKiB": 379760,
+      "cpuPercent": 0.44613634866132995,
+      "latencyMs": 71,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 735959,
+      "rssKiB": 383808,
+      "cpuPercent": 0.3531545553629034,
+      "latencyMs": 80,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 746035,
+      "rssKiB": 385680,
+      "cpuPercent": 0.40347793455955144,
+      "latencyMs": 73,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 756100,
+      "rssKiB": 389296,
+      "cpuPercent": 0.38028512269444636,
+      "latencyMs": 62,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 766160,
+      "rssKiB": 388048,
+      "cpuPercent": 0.41398799711786294,
+      "latencyMs": 56,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 776223,
+      "rssKiB": 385936,
+      "cpuPercent": 0.30097127233336085,
+      "latencyMs": 59,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 786279,
+      "rssKiB": 399456,
+      "cpuPercent": 0.33803362293656364,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 796338,
+      "rssKiB": 412640,
+      "cpuPercent": 0.3723583203486815,
+      "latencyMs": 55,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 806406,
+      "rssKiB": 406240,
+      "cpuPercent": 0.35953302665801457,
+      "latencyMs": 63,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 816484,
+      "rssKiB": 413728,
+      "cpuPercent": 0.3270782362272826,
+      "latencyMs": 74,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 826567,
+      "rssKiB": 417760,
+      "cpuPercent": 0.4278546755511408,
+      "latencyMs": 80,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 836639,
+      "rssKiB": 409344,
+      "cpuPercent": 0.24292228704370902,
+      "latencyMs": 68,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 846727,
+      "rssKiB": 413392,
+      "cpuPercent": 0.2553429260609121,
+      "latencyMs": 83,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 856860,
+      "rssKiB": 398352,
+      "cpuPercent": 0.37268538373457455,
+      "latencyMs": 120,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 866938,
+      "rssKiB": 388384,
+      "cpuPercent": 0.2691145694675945,
+      "latencyMs": 74,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 877015,
+      "rssKiB": 404912,
+      "cpuPercent": 0.34140147374056484,
+      "latencyMs": 73,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 887075,
+      "rssKiB": 406688,
+      "cpuPercent": 0.32643233568471697,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 897156,
+      "rssKiB": 414768,
+      "cpuPercent": 0.3288009744649369,
+      "latencyMs": 77,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 907223,
+      "rssKiB": 428064,
+      "cpuPercent": 0.32529899254269934,
+      "latencyMs": 61,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 917305,
+      "rssKiB": 466896,
+      "cpuPercent": 0.27555621040817957,
+      "latencyMs": 79,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 927368,
+      "rssKiB": 466784,
+      "cpuPercent": 0.31510639502071347,
+      "latencyMs": 58,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 937442,
+      "rssKiB": 481872,
+      "cpuPercent": 0.3666509528337427,
+      "latencyMs": 71,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 947500,
+      "rssKiB": 449456,
+      "cpuPercent": 0.2744087003353168,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 957590,
+      "rssKiB": 472064,
+      "cpuPercent": 0.28174875410894074,
+      "latencyMs": 85,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 967666,
+      "rssKiB": 420176,
+      "cpuPercent": 0.2844301641120446,
+      "latencyMs": 69,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 977780,
+      "rssKiB": 429648,
+      "cpuPercent": 0.38457914104322777,
+      "latencyMs": 109,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 987838,
+      "rssKiB": 432688,
+      "cpuPercent": 0.3239656880930814,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 997904,
+      "rssKiB": 420352,
+      "cpuPercent": 0.2644324888250537,
+      "latencyMs": 61,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1007961,
+      "rssKiB": 449728,
+      "cpuPercent": 0.3270804984306503,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1018019,
+      "rssKiB": 485632,
+      "cpuPercent": 0.29004298707727066,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1028083,
+      "rssKiB": 465376,
+      "cpuPercent": 0.2665066588199011,
+      "latencyMs": 58,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1038143,
+      "rssKiB": 458016,
+      "cpuPercent": 0.21617890978641624,
+      "latencyMs": 55,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1048199,
+      "rssKiB": 433840,
+      "cpuPercent": 0.22910504216425467,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1058249,
+      "rssKiB": 452912,
+      "cpuPercent": 0.192875862557802,
+      "latencyMs": 47,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1068322,
+      "rssKiB": 469504,
+      "cpuPercent": 0.40710900043296216,
+      "latencyMs": 70,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1078379,
+      "rssKiB": 474304,
+      "cpuPercent": 0.27482632357809333,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1088497,
+      "rssKiB": 426064,
+      "cpuPercent": 0.38712906267408426,
+      "latencyMs": 110,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1098564,
+      "rssKiB": 424800,
+      "cpuPercent": 0.39501404865130874,
+      "latencyMs": 60,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1108632,
+      "rssKiB": 417856,
+      "cpuPercent": 0.3978429159505297,
+      "latencyMs": 65,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1118695,
+      "rssKiB": 407104,
+      "cpuPercent": 0.34794523703416674,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1128749,
+      "rssKiB": 420688,
+      "cpuPercent": 0.41223654781418617,
+      "latencyMs": 52,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1138820,
+      "rssKiB": 412240,
+      "cpuPercent": 0.46462499875568597,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1148930,
+      "rssKiB": 423680,
+      "cpuPercent": 0.29683951725915014,
+      "latencyMs": 105,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1158980,
+      "rssKiB": 435184,
+      "cpuPercent": 0.32228210362232473,
+      "latencyMs": 47,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1169035,
+      "rssKiB": 432720,
+      "cpuPercent": 0.3245699707131591,
+      "latencyMs": 49,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1179091,
+      "rssKiB": 449472,
+      "cpuPercent": 0.38086898989138124,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1189161,
+      "rssKiB": 453104,
+      "cpuPercent": 0.37114655871496854,
+      "latencyMs": 67,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1199221,
+      "rssKiB": 455888,
+      "cpuPercent": 0.4127000300178492,
+      "latencyMs": 56,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1209290,
+      "rssKiB": 448368,
+      "cpuPercent": 0.3372932012082434,
+      "latencyMs": 64,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1219345,
+      "rssKiB": 464192,
+      "cpuPercent": 0.3994036753372029,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1229406,
+      "rssKiB": 466368,
+      "cpuPercent": 0.3675893319273138,
+      "latencyMs": 58,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1239499,
+      "rssKiB": 471792,
+      "cpuPercent": 0.42766179171263297,
+      "latencyMs": 90,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1249560,
+      "rssKiB": 470704,
+      "cpuPercent": 0.3734105425983834,
+      "latencyMs": 56,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1259646,
+      "rssKiB": 473552,
+      "cpuPercent": 0.3606301228713511,
+      "latencyMs": 82,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1269723,
+      "rssKiB": 473744,
+      "cpuPercent": 0.30682887475514165,
+      "latencyMs": 72,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1279815,
+      "rssKiB": 467200,
+      "cpuPercent": 0.3766287582415128,
+      "latencyMs": 87,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1289879,
+      "rssKiB": 466048,
+      "cpuPercent": 0.3887101814230149,
+      "latencyMs": 59,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1299936,
+      "rssKiB": 445904,
+      "cpuPercent": 0.2763062338966572,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1309997,
+      "rssKiB": 437760,
+      "cpuPercent": 0.33198008580345434,
+      "latencyMs": 56,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1320088,
+      "rssKiB": 460384,
+      "cpuPercent": 0.3702105349341467,
+      "latencyMs": 87,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1330160,
+      "rssKiB": 461504,
+      "cpuPercent": 0.3331424691156761,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1340212,
+      "rssKiB": 467040,
+      "cpuPercent": 0.3608130829645861,
+      "latencyMs": 49,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1350282,
+      "rssKiB": 451824,
+      "cpuPercent": 0.33174835416403964,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1360333,
+      "rssKiB": 444912,
+      "cpuPercent": 0.27535922321215967,
+      "latencyMs": 47,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1370415,
+      "rssKiB": 466576,
+      "cpuPercent": 0.3418688140138003,
+      "latencyMs": 77,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1380481,
+      "rssKiB": 469728,
+      "cpuPercent": 0.3311593884831044,
+      "latencyMs": 62,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1390535,
+      "rssKiB": 462464,
+      "cpuPercent": 0.3036824550416476,
+      "latencyMs": 49,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1400602,
+      "rssKiB": 468944,
+      "cpuPercent": 0.38448963274874626,
+      "latencyMs": 62,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1410700,
+      "rssKiB": 460336,
+      "cpuPercent": 0.45004500333916775,
+      "latencyMs": 95,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1420756,
+      "rssKiB": 451568,
+      "cpuPercent": 0.3504805271091598,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1430838,
+      "rssKiB": 461648,
+      "cpuPercent": 0.302353406058127,
+      "latencyMs": 78,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1440925,
+      "rssKiB": 327376,
+      "cpuPercent": 0.2735909266180633,
+      "latencyMs": 78,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1451039,
+      "rssKiB": 414608,
+      "cpuPercent": 0.3520169103602343,
+      "latencyMs": 104,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1461110,
+      "rssKiB": 428560,
+      "cpuPercent": 0.27984048969390984,
+      "latencyMs": 67,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1471169,
+      "rssKiB": 436512,
+      "cpuPercent": 0.25806012232820874,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1481235,
+      "rssKiB": 441680,
+      "cpuPercent": 0.3960286575179523,
+      "latencyMs": 62,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1491316,
+      "rssKiB": 466240,
+      "cpuPercent": 0.3029933310189454,
+      "latencyMs": 77,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1501372,
+      "rssKiB": 473264,
+      "cpuPercent": 0.3559019849024644,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1511422,
+      "rssKiB": 474640,
+      "cpuPercent": 0.26616997686354865,
+      "latencyMs": 46,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1521475,
+      "rssKiB": 475888,
+      "cpuPercent": 0.29444463472871063,
+      "latencyMs": 48,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1531534,
+      "rssKiB": 464192,
+      "cpuPercent": 0.26230030856917574,
+      "latencyMs": 56,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1541608,
+      "rssKiB": 469760,
+      "cpuPercent": 0.33433498733753564,
+      "latencyMs": 70,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1551663,
+      "rssKiB": 471984,
+      "cpuPercent": 0.25591701950097423,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1561748,
+      "rssKiB": 473760,
+      "cpuPercent": 0.3041062525592481,
+      "latencyMs": 81,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1571814,
+      "rssKiB": 474576,
+      "cpuPercent": 0.30134818333859303,
+      "latencyMs": 60,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1581878,
+      "rssKiB": 476960,
+      "cpuPercent": 0.3398716050909477,
+      "latencyMs": 61,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1591931,
+      "rssKiB": 456080,
+      "cpuPercent": 0.22158007169984992,
+      "latencyMs": 49,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1602036,
+      "rssKiB": 472912,
+      "cpuPercent": 0.36359469746578393,
+      "latencyMs": 101,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1612088,
+      "rssKiB": 471792,
+      "cpuPercent": 0.3107298642940346,
+      "latencyMs": 48,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1622185,
+      "rssKiB": 469968,
+      "cpuPercent": 0.257243042834745,
+      "latencyMs": 93,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1632237,
+      "rssKiB": 470416,
+      "cpuPercent": 0.31314536310329405,
+      "latencyMs": 47,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1642292,
+      "rssKiB": 472976,
+      "cpuPercent": 0.3309610713762641,
+      "latencyMs": 51,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1652354,
+      "rssKiB": 473680,
+      "cpuPercent": 0.22750433421741692,
+      "latencyMs": 52,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1662411,
+      "rssKiB": 473024,
+      "cpuPercent": 0.2768994371953373,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1672482,
+      "rssKiB": 451680,
+      "cpuPercent": 0.3452661594945732,
+      "latencyMs": 66,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1682540,
+      "rssKiB": 405056,
+      "cpuPercent": 0.2029091625352003,
+      "latencyMs": 54,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1692601,
+      "rssKiB": 417312,
+      "cpuPercent": 0.3453002720774406,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1702654,
+      "rssKiB": 433760,
+      "cpuPercent": 0.3176134690031565,
+      "latencyMs": 49,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1712735,
+      "rssKiB": 446096,
+      "cpuPercent": 0.35625790351505265,
+      "latencyMs": 78,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1722782,
+      "rssKiB": 445232,
+      "cpuPercent": 0.3220366210944524,
+      "latencyMs": 45,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1732884,
+      "rssKiB": 430704,
+      "cpuPercent": 0.2826320645828352,
+      "latencyMs": 96,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1742943,
+      "rssKiB": 450560,
+      "cpuPercent": 0.2221696872618771,
+      "latencyMs": 53,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1753029,
+      "rssKiB": 468096,
+      "cpuPercent": 0.25539238878852216,
+      "latencyMs": 79,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1763092,
+      "rssKiB": 470512,
+      "cpuPercent": 0.34099445294667463,
+      "latencyMs": 59,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1773161,
+      "rssKiB": 473440,
+      "cpuPercent": 0.27568610457292203,
+      "latencyMs": 64,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1783216,
+      "rssKiB": 472128,
+      "cpuPercent": 0.3472805264608559,
+      "latencyMs": 50,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1793292,
+      "rssKiB": 474880,
+      "cpuPercent": 0.42271726226827344,
+      "latencyMs": 72,
+      "modelCalls": 7,
+      "windows": 1
+    },
+    {
+      "elapsedMs": 1803354,
+      "rssKiB": 475008,
+      "cpuPercent": 0.4265374454613779,
+      "latencyMs": 57,
+      "modelCalls": 7,
+      "windows": 1
+    }
+  ],
+  "samplingGapAuditMs": 10133,
+  "checkpointOnly": true
+}
