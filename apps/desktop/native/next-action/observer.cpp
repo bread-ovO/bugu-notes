@@ -52,7 +52,15 @@ void observeVisible(){
 
 double now(){return std::chrono::duration<double,std::milli>(std::chrono::system_clock::now().time_since_epoch()).count();}
 void send(const std::string& s){std::cout<<s<<std::endl;}
-bool composing(){ HWND window=GetForegroundWindow(); HWND ime=ImmGetDefaultIMEWnd(window); DWORD_PTR status=0; if(!ime)return false; if(!SendMessageTimeoutW(ime,WM_IME_CONTROL,IMC_GETOPENSTATUS,0,SMTO_ABORTIFHUNG,50,&status))return true;return status!=0; }
+// Foreign-process TSF composition cannot be queried reliably with IMM messages.
+// Fail closed for IME/CJK layouts; never infer "composition ended" from an idle timer.
+bool composing(){
+ HWND window=GetForegroundWindow();if(!window)return true;
+ DWORD thread=GetWindowThreadProcessId(window,nullptr);if(!thread)return true;
+ HKL layout=GetKeyboardLayout(thread);if(!layout)return true;
+ WORD language=PRIMARYLANGID(LOWORD(reinterpret_cast<ULONG_PTR>(layout)));
+ return ImmIsIME(layout)||language==LANG_CHINESE||language==LANG_JAPANESE||language==LANG_KOREAN;
+}
 void input(){send("{\"type\":\"input\",\"known\":true,\"composing\":"+std::string(composing()?"true":"false")+",\"lastInputAt\":"+std::to_string(lastInput)+"}");}
 LRESULT CALLBACK keyboard(int code,WPARAM w,LPARAM l){
  if(code<0)return CallNextHookEx(hook,code,w,l);
