@@ -1,0 +1,27 @@
+{
+  "provider": "codex-cli",
+  "concurrency": 4,
+  "model": "CLI default",
+  "syntheticCases": true,
+  "planned": 360,
+  "executed": 360,
+  "passed": 347,
+  "familyCount": 200,
+  "complete": true,
+  "accuracy": 0.9638888888888889,
+  "modes": {
+    "classify-event": {
+      "total": 80,
+      "passed": 79
+    },
+    "attribute-transition": {
+      "total": 120,
+      "passed": 120
+    },
+    "recommend": {
+      "total": 160,
+      "passed": 148
+    }
+  },
+  "note": "Synthetic fixture results only. Time/ordering variants are correlated and must not be counted as independent evidence of production accuracy."
+}

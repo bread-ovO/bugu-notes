@@ -1,0 +1,53 @@
+{
+  "baselineOriginalPassed": 347,
+  "baselineTotal": 360,
+  "baselineLabelCorrectedPassed": 349,
+  "labelCorrections": [
+    "recommend-reply-3-normal",
+    "recommend-reply-3-reverse"
+  ],
+  "reason": "Mail reply has no supported mail candidate; abstention was the correct expected result. No model output was changed.",
+  "classification": {
+    "passed": 79,
+    "total": 80,
+    "wilson95": [
+      0.9325,
+      0.9978
+    ]
+  },
+  "attribution": {
+    "passed": 120,
+    "total": 120,
+    "independentFamilies": 40,
+    "familyPassed": 40,
+    "familyWilson95": [
+      0.9124,
+      1.0
+    ]
+  },
+  "recommendation": {
+    "acceptedPositive": 128,
+    "correctAcceptedPositive": 128,
+    "precision": 1.0,
+    "eligibleRows": 138,
+    "coverage": 0.927536231884058,
+    "lowConfidenceAbstentions": 10,
+    "expectedAbstentionsCorrect": 22,
+    "expectedAbstentionsTotal": 22,
+    "familyAllVariantsPassed": 73,
+    "familyTotal": 80
+  },
+  "latencyMs": {
+    "median": 32470.5,
+    "p95": 36684
+  },
+  "provenance": {
+    "baselineModelSourceGitRef": "470d2f4",
+    "baselineCorpusGitRef": "470d2f4",
+    "retestModelSourceSha256": "68a5f8885306b12ee09f3964b20c524d925faea6ae2725b6d7ec483878c05698",
+    "correlatedVariants": true,
+    "baselineValidationErrorsLackRawResponse": true,
+    "targetedRetestIsNotANewFull360Pass": true,
+    "runtimeVersion": "1e502da54dce23781150f9cad46dd40022394288"
+  }
+}
