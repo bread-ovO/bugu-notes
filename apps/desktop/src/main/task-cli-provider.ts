@@ -2,38 +2,38 @@ import { spawn } from 'node:child_process'
 import { access, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
-import { delimiter, isAbsolute, join } from 'node:path'
+import { join, win32, posix } from 'node:path'
 import type { ModelConfig } from '@memo/contracts'
 import type { TaskModelRequest } from '@memo/model'
+/** Resolve known native/npm entrypoints without ever executing .cmd through a shell. */
+export function modelCliCandidates(provider: string, platform: string, home: string, pathValue: string): string[] {
+  const name = provider === 'codex-cli' ? 'codex' : provider === 'claude-cli' ? 'claude' : null
+  if (!name) return []
+  const path = platform === 'win32' ? win32 : posix
+  const dirs = [path.join(home, '.local/bin'), ...(platform === 'win32'
+    ? [path.join(home, 'AppData/Roaming/npm')]
+    : ['/opt/homebrew/bin', '/usr/local/bin']), ...pathValue.split(platform === 'win32' ? ';' : ':')]
+  const candidates = [...new Set(dirs.filter(path.isAbsolute))].flatMap((dir) => platform === 'win32'
+    ? [path.join(dir, `${name}.exe`), path.join(dir, 'node_modules', ...(name === 'codex'
+      ? ['@openai', 'codex', 'bin', 'codex.js']
+      : ['@anthropic-ai', 'claude-code', 'cli.js']))]
+    : [path.join(dir, name)])
+  if (name === 'codex' && platform === 'darwin') candidates.push(
+    '/Applications/ChatGPT.app/Contents/Resources/codex', '/Applications/Codex.app/Contents/Resources/codex')
+  return candidates
+}
 export async function findModelCli(provider: string): Promise<string | null> {
-  const name =
-    provider === 'codex-cli'
-      ? 'codex'
-      : provider === 'claude-cli'
-        ? 'claude'
-        : null
-  if (!name) return null
-  const dirs = [
-    join(homedir(), '.local/bin'),
-    '/opt/homebrew/bin',
-    '/usr/local/bin',
-    ...(process.env.PATH ?? '').split(delimiter),
-  ]
-  const candidates = [...dirs.filter(isAbsolute).map((dir) => join(dir, name))]
-  if (name === 'codex' && process.platform === 'darwin')
-    candidates.push(
-      '/Applications/ChatGPT.app/Contents/Resources/codex',
-      '/Applications/Codex.app/Contents/Resources/codex',
-    )
-  for (const path of candidates) {
+  for (const path of modelCliCandidates(provider, process.platform, homedir(), process.env.PATH ?? '')) {
     try {
-      await access(path, constants.X_OK)
+      await access(path, process.platform === 'win32' ? constants.R_OK : constants.X_OK)
       return path
-    } catch {
-      /* next */
-    }
+    } catch { /* try next installed entrypoint */ }
   }
   return null
+}
+export function analysisCliInvocation(executable: string, args: string[], platform: string, runtime = process.execPath) {
+  const nodeScript = platform === 'win32' && /\.(?:cjs|mjs|js)$/i.test(executable)
+  return { executable: nodeScript ? runtime : executable, args: nodeScript ? [executable, ...args] : args, nodeScript }
 }
 export function cliArguments(
   config: ModelConfig,
@@ -108,7 +108,9 @@ export function runAnalysisCli(
     delete env.CLAUDECODE
     delete env.CLAUDE_CODE_ENTRYPOINT
     delete env.ELECTRON_RUN_AS_NODE
-    const child = spawn(executable, args, {
+    const invocation = analysisCliInvocation(executable, args, process.platform)
+    if (invocation.nodeScript) env.ELECTRON_RUN_AS_NODE = '1'
+    const child = spawn(invocation.executable, invocation.args, {
       cwd,
       env,
       shell: false,
@@ -122,7 +124,10 @@ export function runAnalysisCli(
       try {
         if (process.platform !== 'win32' && child.pid)
           process.kill(-child.pid, 'SIGKILL')
-        else child.kill('SIGKILL')
+        else if (child.pid) {
+          const killer = spawn('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore', shell: false })
+          killer.on('error', () => child.kill('SIGKILL'))
+        } else child.kill('SIGKILL')
       } catch {
         /* exited */
       }

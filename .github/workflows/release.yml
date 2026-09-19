@@ -83,6 +83,8 @@ jobs:
         run: node scripts/release.mjs version
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify CLI entrypoints and cancellation
+        run: pnpm exec vitest run tests/unit/model-cli-entrypoint.test.ts
       - name: Install Linux ZIP support
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y libarchive-tools libx11-dev libsecret-1-dev gnome-keyring dbus-x11
