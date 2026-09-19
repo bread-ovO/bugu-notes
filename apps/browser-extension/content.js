@@ -1,4 +1,6 @@
 ;(() => {
+  if (globalThis.__buguVisibleObject) return
+  globalThis.__buguVisibleObject = true
   let timer,
     last = '',
     acknowledgedAt = 0

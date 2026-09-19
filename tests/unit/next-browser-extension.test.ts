@@ -18,7 +18,7 @@ function extension(
     .mockResolvedValue({ ok: true, protocolVersion: patch.protocol ?? 1 })
   const chrome = {
     permissions: {
-      getAll: vi.fn().mockResolvedValue({ origins: [] }),
+      getAll: vi.fn().mockResolvedValue({ origins: [] as string[] }),
       contains: vi.fn().mockResolvedValue(patch.permitted ?? true),
       onAdded: { addListener: vi.fn() },
       onRemoved: { addListener: vi.fn() },
@@ -26,6 +26,7 @@ function extension(
     scripting: {
       unregisterContentScripts: vi.fn(),
       registerContentScripts: vi.fn(),
+      executeScript: vi.fn().mockResolvedValue([]),
     },
     runtime: {
       onMessage: { addListener: listener },
@@ -34,6 +35,7 @@ function extension(
       sendNativeMessage,
     },
     tabs: {
+      query: vi.fn().mockResolvedValue([{ id: 1 }]),
       get: vi.fn().mockResolvedValue({
         active: patch.active ?? true,
         url: patch.url ?? 'https://github.com/org/repo/pull/1',
@@ -62,6 +64,29 @@ function extension(
   return { chrome, message, handler, hidden }
 }
 describe('browser extension scope and protocol', () => {
+  it('activates already-open authorized pages and serializes grant/revoke configuration', async () => {
+    const e = extension()
+    e.chrome.permissions.getAll.mockResolvedValueOnce({
+      origins: ['https://github.com/*'],
+    })
+    const added = e.chrome.permissions.onAdded.addListener.mock.calls[0]![0]
+    const removed = e.chrome.permissions.onRemoved.addListener.mock.calls[0]![0]
+    added()
+    removed()
+    await vi.waitFor(() =>
+      expect(e.chrome.scripting.unregisterContentScripts).toHaveBeenCalledTimes(
+        2,
+      ),
+    )
+    expect(e.chrome.tabs.query).toHaveBeenCalledWith({
+      url: ['https://github.com/*'],
+    })
+    expect(e.chrome.scripting.executeScript).toHaveBeenCalledWith({
+      target: { tabId: 1 },
+      files: ['content.js'],
+    })
+    expect(e.chrome.scripting.registerContentScripts).toHaveBeenCalledTimes(1)
+  })
   it('sends only the current permitted object URL and requires a compatible host', async () => {
     const e = extension()
     expect(await e.message()).toEqual({ ok: true })
@@ -153,25 +178,42 @@ describe('visible object recovery', () => {
     vi.useFakeTimers()
     try {
       const handlers: Record<string, () => void> = {}
-      const doc = { visibilityState: 'visible', hasFocus: () => true,
-        addEventListener: (name: string, handler: () => void) => { handlers[name] = handler } }
+      const doc = {
+        visibilityState: 'visible',
+        hasFocus: () => true,
+        addEventListener: (name: string, handler: () => void) => {
+          handlers[name] = handler
+        },
+      }
       const sendMessage = vi.fn().mockResolvedValue({ ok: true })
-      runInNewContext(readFileSync('apps/browser-extension/content.js', 'utf8'), {
-        document: doc, location: { href: 'https://github.com/org/repo/pull/1' },
-        chrome: { runtime: { sendMessage } }, Date,
-        setTimeout, clearTimeout, setInterval,
-        addEventListener: (name: string, handler: () => void) => { handlers[name] = handler },
+      const content = readFileSync('apps/browser-extension/content.js', 'utf8')
+      runInNewContext(content + '\n' + content, {
+        document: doc,
+        location: { href: 'https://github.com/org/repo/pull/1' },
+        chrome: { runtime: { sendMessage } },
+        Date,
+        setTimeout,
+        clearTimeout,
+        setInterval,
+        addEventListener: (name: string, handler: () => void) => {
+          handlers[name] = handler
+        },
       })
       await vi.advanceTimersByTimeAsync(1600)
       expect(sendMessage).toHaveBeenCalledTimes(1)
-      doc.visibilityState = 'hidden'; handlers.visibilitychange!()
+      doc.visibilityState = 'hidden'
+      handlers.visibilitychange!()
       await vi.advanceTimersByTimeAsync(4000)
       expect(sendMessage).toHaveBeenCalledTimes(1)
-      doc.visibilityState = 'visible'; handlers.visibilitychange!()
+      doc.visibilityState = 'visible'
+      handlers.visibilitychange!()
       await vi.advanceTimersByTimeAsync(2000)
       expect(sendMessage).toHaveBeenCalledTimes(2)
       await vi.advanceTimersByTimeAsync(14000)
       expect(sendMessage.mock.calls.length).toBeGreaterThan(2)
-    } finally { vi.clearAllTimers(); vi.useRealTimers() }
+    } finally {
+      vi.clearAllTimers()
+      vi.useRealTimers()
+    }
   })
 })

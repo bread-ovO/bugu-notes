@@ -27,7 +27,8 @@
     "test:next-action": "vitest run tests/unit/next-action-learning.test.ts tests/unit/next-action-model.test.ts tests/unit/next-action-hint.test.ts tests/unit/next-workflow-host.test.ts tests/unit/next-browser-extension.test.ts tests/unit/next-browser-lifecycle.test.ts tests/unit/model-cli-entrypoint.test.ts tests/unit/next-native-observer.test.ts",
     "test:next-action:e2e": "playwright test tests/desktop/next-action.spec.ts tests/desktop/next-workflow.spec.ts",
     "eval:next-action": "node scripts/eval-next-action.mjs",
-    "test:next-action:native": "node scripts/test-next-native.mjs"
+    "test:next-action:native": "node scripts/test-next-native.mjs",
+    "eval:next-action:learning": "node scripts/eval-next-learning.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",

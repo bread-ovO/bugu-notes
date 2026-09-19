@@ -24,9 +24,9 @@ test('isolated Chromium extension grants, native host, tab changes, revocation a
   )
   const profile = join(root, 'profile'),
     assets = resolve('apps/browser-extension'),
-    host = join(root, 'host/browser-host')
+    host = join(root, 'data/next-action-browser/browser-host')
   const seen: string[] = []
-  const bridge = new BrowserContextBridge(
+  let bridge = new BrowserContextBridge(
     join(root, 'data'),
     assets,
     'unused',
@@ -48,7 +48,6 @@ test('isolated Chromium extension grants, native host, tab changes, revocation a
   try {
     await bridge.start()
     const state = bridge as unknown as { endpoint: string; secret: string }
-    await mkdir(join(root, 'host'))
     await mkdir(join(profile, 'NativeMessagingHosts'), { recursive: true })
     await copyFile(
       resolve('apps/desktop/out/native/next-action-browser-host'),
@@ -57,7 +56,7 @@ test('isolated Chromium extension grants, native host, tab changes, revocation a
     sealed = await pairingSecret(host, 'seal', state.secret)
     const id = 'focajhkglkjjahihpcppojgakcbpcece'
     await writeFile(
-      join(root, 'host/browser-host.conf'),
+      join(root, 'data/next-action-browser/browser-host.conf'),
       `${state.endpoint}\n${sealed}\nchrome-extension://${id}/\n`,
       { mode: 0o600 },
     )
@@ -82,6 +81,11 @@ test('isolated Chromium extension grants, native host, tab changes, revocation a
       context.serviceWorkers()[0] ??
       (await context.waitForEvent('serviceworker'))
     expect(worker.url()).toContain(id)
+    // The work page predates permission: granting must not require a reload.
+    const work = await context.newPage()
+    await work.goto(
+      'https://github.com/bugu-fixture/isolated/pull/7?token=synthetic#fragment',
+    )
     const options = await context.newPage()
     await options.goto(`chrome-extension://${id}/options.html`)
     await expect(options.locator('#status')).toContainText('已授权：无')
@@ -92,10 +96,6 @@ test('isolated Chromium extension grants, native host, tab changes, revocation a
     await expect(options.locator('#status')).toContainText(
       'https://github.com/*',
       { timeout: 120000 },
-    )
-    const work = await context.newPage()
-    await work.goto(
-      'https://github.com/bugu-fixture/isolated/pull/7?token=synthetic#fragment',
     )
     await work.bringToFront()
     const canonical = 'https://github.com/bugu-fixture/isolated/pull/7'
@@ -152,6 +152,19 @@ test('isolated Chromium extension grants, native host, tab changes, revocation a
         )
         throw error
       })
+    bridge.stop()
+    const beforeRestart = seen.filter((url) => url === canonical).length
+    await work.waitForTimeout(2500)
+    expect(seen.filter((url) => url === canonical)).toHaveLength(beforeRestart)
+    bridge = new BrowserContextBridge(join(root, 'data'), assets, host, (url) =>
+      seen.push(url),
+    )
+    await bridge.resume()
+    await expect
+      .poll(() => seen.filter((url) => url === canonical).length, {
+        timeout: 20000,
+      })
+      .toBeGreaterThan(beforeRestart)
     await options.bringToFront()
     await options.locator('#revoke').click()
     await expect(options.locator('#status')).toContainText('已授权：无')

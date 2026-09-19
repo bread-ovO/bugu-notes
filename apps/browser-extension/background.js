@@ -3,11 +3,16 @@ const hosts = [
   'https://*.feishu.cn/*',
   'https://*.larksuite.com/*',
 ]
-async function configure() {
+let configuration = Promise.resolve()
+const configure = () => {
+  configuration = configuration.catch(() => {}).then(configureScripts)
+  return configuration
+}
+async function configureScripts() {
   const granted = (await chrome.permissions.getAll()).origins ?? []
   await chrome.scripting.unregisterContentScripts()
   const matches = hosts.filter((h) => granted.includes(h))
-  if (matches.length)
+  if (matches.length) {
     await chrome.scripting.registerContentScripts([
       {
         id: 'bugu-visible-object',
@@ -17,14 +22,33 @@ async function configure() {
         persistAcrossSessions: true,
       },
     ])
+    // Registering scripts covers future navigations only. Also activate already-open
+    // authorized tabs, without asking the user to reload their current work.
+    const tabs = await chrome.tabs.query({ url: matches })
+    await Promise.all(
+      tabs
+        .filter((tab) => Number.isInteger(tab.id))
+        .map((tab) =>
+          chrome.scripting
+            .executeScript({ target: { tabId: tab.id }, files: ['content.js'] })
+            .catch(() => {}),
+        ),
+    )
+  }
 }
-chrome.permissions.onAdded.addListener(configure)
+chrome.permissions.onAdded.addListener(() => {
+  void configure().catch(() => {})
+})
 chrome.permissions.onRemoved.addListener(() => {
   clearContext()
   void configure().catch(() => {})
 })
-chrome.runtime.onInstalled.addListener(configure)
-chrome.runtime.onStartup.addListener(configure)
+chrome.runtime.onInstalled.addListener(() => {
+  void configure().catch(() => {})
+})
+chrome.runtime.onStartup.addListener(() => {
+  void configure().catch(() => {})
+})
 const seen = new Map()
 let generation = 0
 let nativeQueue = Promise.resolve()
