@@ -1,6 +1,6 @@
 import { expect, _electron as electron } from '@playwright/test'
 import { build } from 'esbuild'
-import { mkdtemp, realpath, rm, symlink } from 'node:fs/promises'
+import { mkdtemp, realpath, rm, symlink, cp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
@@ -12,7 +12,7 @@ declare global {
     revoke(): Promise<unknown>
   }
 }
-export async function host() {
+export async function host(snapshot = false) {
   const root = await realpath(
       await mkdtemp(join(tmpdir(), 'bugu-workflow-e2e-')),
     ),
@@ -31,6 +31,8 @@ export async function host() {
     external: ['electron', 'better-sqlite3'],
     tsconfig: resolve('tsconfig.json'),
   })
+  const out = snapshot ? join(root, 'out') : resolve('apps/desktop/out')
+  if (snapshot) await cp(resolve('apps/desktop/out'), out, { recursive: true })
   const env = Object.fromEntries(
     Object.entries(process.env).filter(
       ([k, v]) => k !== 'ELECTRON_RUN_AS_NODE' && v !== undefined,
@@ -43,7 +45,7 @@ export async function host() {
       ...env,
       NODE_PATH: resolve('apps/desktop/node_modules'),
       NEXT_WORKFLOW_TEST_ROOT: root,
-      NEXT_WORKFLOW_TEST_OUT: resolve('apps/desktop/out'),
+      NEXT_WORKFLOW_TEST_OUT: out,
     },
   })
   const page = await app.firstWindow()

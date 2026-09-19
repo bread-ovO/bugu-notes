@@ -20,15 +20,26 @@ var candidates:[VisibleCandidate]=[]
 var visibilitySince:[Int:Double]=[:]
 var emitted=Set<Int>()
 var lastScan:Double=0
+var previousWindow:AXUIElement? = nil
+func clearVisible() {
+ visibilitySince.removeAll();emitted.removeAll();previousWindow=nil
+ send(["type":"visible-set","ids":[]])
+}
 func normalized(_ value:String)->String { value.split(whereSeparator:{$0.isWhitespace}).joined(separator:" ") }
 // Read only visible static text, locally match already-authorized records, then discard the text.
 func visibleRecords(_ application:NSRunningApplication) {
+    var scanned=false
+    defer { if !scanned { clearVisible() } }
     let relevant=candidates.filter{$0.app==application.bundleIdentifier}
-    if relevant.isEmpty {visibilitySince.removeAll();emitted.removeAll();send(["type":"visible-set","ids":[]]);return}
+    if relevant.isEmpty {return}
     let element=AXUIElementCreateApplication(application.processIdentifier)
+    // A frozen client must not stall the helper and its key-release run loop.
+    AXUIElementSetMessagingTimeout(element,0.02)
     var raw:CFTypeRef?
     guard AXUIElementCopyAttributeValue(element,kAXFocusedWindowAttribute as CFString,&raw) == .success,let raw=raw else{return}
     let window=unsafeBitCast(raw,to:AXUIElement.self)
+    if let old=previousWindow,!CFEqual(old,window) { clearVisible() }
+    previousWindow=window
     func bounds(_ node:AXUIElement)->CGRect? {
         var position:CFTypeRef?,size:CFTypeRef?
         guard AXUIElementCopyAttributeValue(node,kAXPositionAttribute as CFString,&position) == .success,
@@ -43,6 +54,7 @@ func visibleRecords(_ application:NSRunningApplication) {
     let deadline=timestamp()+30
     while let node=stack.popLast(),count<400,timestamp()<deadline {
         count+=1
+        AXUIElementSetMessagingTimeout(node,0.02)
         var role:CFTypeRef?
         AXUIElementCopyAttributeValue(node,kAXRoleAttribute as CFString,&role)
         if role as? String == kAXStaticTextRole,let frame=bounds(node),!frame.isEmpty,windowBounds.contains(frame) {
@@ -56,9 +68,14 @@ func visibleRecords(_ application:NSRunningApplication) {
         }
         if let nodes=children as? [AXUIElement] {stack.append(contentsOf:nodes.prefix(400-count))}
     }
+    guard NSWorkspace.shared.frontmostApplication?.processIdentifier == application.processIdentifier else {return}
+    var focused:CFTypeRef?
+    guard AXUIElementCopyAttributeValue(element,kAXFocusedWindowAttribute as CFString,&focused) == .success,
+          let focused=focused,CFEqual(focused,window) else{return}
     // Ambiguous identical messages never become concrete object observations.
     let matches=relevant.filter{c in texts.contains(where:{$0==c.text}) && relevant.filter{$0.text==c.text}.count==1}
     let ids=Set(matches.map{$0.id})
+    scanned=true
     send(["type":"visible-set","ids":Array(ids)])
     visibilitySince=visibilitySince.filter{ids.contains($0.key)};emitted=emitted.intersection(ids)
     for c in matches {
@@ -77,7 +94,7 @@ if CommandLine.arguments.contains("--self-test") {
 var tap: CFMachPort?
 let requestPermission = CommandLine.arguments.contains("--permission")
 if requestPermission { _ = CGRequestListenEventAccess() }
-let trusted = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: requestPermission] as CFDictionary)
+var trusted = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: requestPermission] as CFDictionary)
 func asciiInput() -> Bool {
     guard let source = TISCopyCurrentKeyboardInputSource()?.takeRetainedValue(),
           let pointer = TISGetInputSourceProperty(source, kTISPropertyInputSourceIsASCIICapable) else { return false }
@@ -122,8 +139,19 @@ let timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
     let app = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? ""
     if app != previousApp { releaseLease(); previousApp = app; send(["type":"foreground", "app":app]) }
     if timestamp() >= leaseEnd { releaseLease() }
-    if trusted && timestamp()-lastScan>=1000,let current=NSWorkspace.shared.frontmostApplication {
-        lastScan=timestamp();visibleRecords(current)
+    if timestamp()-lastScan>=1000 {
+        lastScan=timestamp()
+        let permission=AXIsProcessTrusted()
+        if (trusted && !permission) || (tap != nil && !CGPreflightListenEventAccess()) {
+            releaseLease();clearVisible()
+            if let old=tap {CGEvent.tapEnable(tap:old,enable:false);CFMachPortInvalidate(old)}
+            tap=nil;inputKnown=false
+            send(["type":"locked"])
+            send(["type":"capability","foreground":true,"input":false,"tab":false,"reason":"系统权限已撤销；重新授权后开启观察"])
+        }
+        trusted=permission
+        if trusted,let current=NSWorkspace.shared.frontmostApplication { visibleRecords(current) }
+        else { clearVisible() }
     }
     let known = tap != nil && (tap.map { CGEvent.tapIsEnabled(tap: $0) } ?? false)
     let blocked = !asciiInput()
@@ -142,7 +170,7 @@ DispatchQueue.global().async {
         DispatchQueue.main.async {
             if line.hasPrefix("watch "),let data=line.dropFirst(6).data(using:.utf8),let rows=(try? JSONSerialization.jsonObject(with:data)) as? [[String:Any]],rows.count<=40 {
                 candidates=rows.compactMap{r in guard let id=r["recordId"] as? Int,let app=r["app"] as? String,let text=r["text"] as? String,id>0,text.count>=48,text.count<=1000 else{return nil};return VisibleCandidate(id:id,app:app,text:normalized(text))}
-                visibilitySince.removeAll();emitted.removeAll()
+                clearVisible()
             }
             if parts.first == "release" { releaseLease() }
             if parts.first == "arm", parts.count == 3, let until = Double(parts[2]),
