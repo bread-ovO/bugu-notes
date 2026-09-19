@@ -1,3 +1,7 @@
+import { nextWorkflowRequestSchema, parseNextHostRequest, type NextHostRequest, type NextWorkbench } from './next-workflow'
+export * from './next-workflow'
+import { nextActionRequestSchema, type NextActionSnapshot, type NextActionSettings, type NextFeedbackKind } from './next-action'
+export * from './next-action'
 import { taskChatRequestSchema, type ChatSnapshot } from './task-chat'
 export * from './task-chat'
 import { modelProviderRequestSchema, type ModelConfig, type ModelProviderSnapshot } from './model-provider'
@@ -236,6 +240,8 @@ const coreRequestSchema = {
     credentialRequestSchema,
     modelProviderRequestSchema,
     taskChatRequestSchema,
+    nextActionRequestSchema,
+    nextWorkflowRequestSchema,
     pluginsRequestSchema,
     ...petRequestSchemas,
   ],
@@ -285,6 +291,7 @@ export type HostRequest =
           | 'pet.hide'
       }
     >
+  | NextHostRequest
   | ImportFileRequest
   | ImportDirectoryRequest
   | ExportBuildRequest
@@ -311,6 +318,7 @@ const validateFeishuHost = ajv.compile<FeishuHostRequest>(
   createFeishuHostRequestSchema(sourceEventSchema),
 )
 export function parseHostRequest(value: unknown): HostRequest {
+  if (value && typeof value === 'object' && 'method' in value && typeof value.method === 'string' && value.method.startsWith('nextActionHost.')) return parseNextHostRequest(value)
   if (validateFeishuHost(value)) return value
   if (validateGithubHost(value)) return value
   if (validatePluginHost(value)) {
@@ -401,6 +409,7 @@ export type CoreReply<T = Health> =
   | {
       ok: false
       error:
+        | 'NEXT_SECURE_STORAGE_UNAVAILABLE'
         | 'INVALID_REFERENCE_REVIEW'
         | 'REFERENCE_REVIEW_CONFLICT'
         | 'REFERENCE_RETRACTED'
@@ -486,6 +495,29 @@ export type CoreReply<T = Health> =
         | 'INGESTION_PROBE_UNAVAILABLE'
     }
 export interface DesktopBridge {
+  readonly nextActionPreview: boolean
+  nextAction: {
+    browserRemove():Promise<CoreReply<NextWorkbench>>
+    diagnostics():Promise<CoreReply<{saved:boolean}>>
+    dismissSuggestion(id:string,kind:'wrong-event'|'wrong-type'|'wrong-target'|'dismissed'):Promise<CoreReply<NextWorkbench>>
+    forgetPreference(eventId:string,scope:'project'|'personal'):Promise<CoreReply<NextWorkbench>>
+    addApplication(): Promise<CoreReply<NextWorkbench>>
+    workbench(): Promise<CoreReply<NextWorkbench>>
+    enroll(sourceIds: string[], expectedVersion: number): Promise<CoreReply<NextWorkbench>>
+    inspect(recordId: number): Promise<CoreReply<NextWorkbench>>
+    choose(eventId: string, targetId: string, suggestionId?: string): Promise<CoreReply<NextWorkbench>>
+    prefer(eventId: string, toolId: string, scope: 'project'|'personal'): Promise<CoreReply<NextWorkbench>>
+    reclassify(eventId: string, eventType: import('./next-action').NextEventType): Promise<CoreReply<NextWorkbench>>
+    erase(scope: 'project'|'source'|'tool', id: string): Promise<CoreReply<NextWorkbench>>
+    observation(enabled: boolean, appIds: string[]): Promise<CoreReply<NextWorkbench>>
+    permission(): Promise<CoreReply<NextWorkbench>>
+    browserSetup(): Promise<CoreReply<{ directory: string }>>
+    status(): Promise<CoreReply<NextActionSnapshot>>
+    configure(settings: NextActionSettings, expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+    clear(expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+    feedback(choiceId: string, kind: NextFeedbackKind, expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+    undo(feedbackId: string, expectedVersion: number): Promise<CoreReply<NextActionSnapshot>>
+  }
   readonly platform: 'darwin' | 'win32' | 'linux' | 'other'
   readonly startupMode: 'demo' | 'real' | null
   onOpenPetSettings?(callback: () => void): () => void

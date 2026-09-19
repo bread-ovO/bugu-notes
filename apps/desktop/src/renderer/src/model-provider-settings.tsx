@@ -221,7 +221,7 @@ export function ModelProviderSettings({
                 {new Date(state.lastRequest.sentAt).toLocaleString()}
               </p>
               <small>
-                {state.lastRequest.purpose === 'task-chat'
+                {state.lastRequest.purpose === 'next-action' ? '猜你想做' : state.lastRequest.purpose === 'task-chat'
                   ? '任务聊天'
                   : '自动事项分析'}{' '}
                 · 仅保留本次启动的最近一次请求；调用失败不代表服务已收到

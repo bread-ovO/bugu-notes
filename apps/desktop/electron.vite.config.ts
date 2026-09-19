@@ -20,6 +20,7 @@ const alias = {
       'connectors',
       'plugin-host',
       'model',
+      'next-action',
       'evals',
     ].map((name) => [
       `@memo/${name}`,
@@ -64,6 +65,7 @@ export default defineConfig({
         input: {
           index: resolve(__dirname, 'src/preload/index.ts'),
           pet: resolve(__dirname, 'src/preload/pet.ts'),
+          'next-hint': resolve(__dirname, 'src/preload/next-hint.ts'),
         },
         output: { format: 'cjs', entryFileNames: '[name].js' },
       },
@@ -76,6 +78,7 @@ export default defineConfig({
         input: {
           index: resolve(__dirname, 'src/renderer/index.html'),
           pet: resolve(__dirname, 'src/renderer/pet.html'),
+          'next-hint': resolve(__dirname, 'src/renderer/next-hint.html'),
         },
       },
     },

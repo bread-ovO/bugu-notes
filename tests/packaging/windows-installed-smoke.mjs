@@ -35,7 +35,7 @@ try {
   report.checks.mainWindow = true
   await expect.poll(() => page.evaluate(async () => (await window.memo.health()).ok), { timeout: 20000 }).toBe(true)
   report.health = await page.evaluate(() => window.memo.health())
-  expect(report.health.data.schemaVersion).toBe(25)
+  expect(report.health.data.schemaVersion).toBe(28)
   const initial = await page.evaluate(() => window.memo.workspace.list())
   report.initialWorkspace = initial
   expect(initial.ok).toBe(true)

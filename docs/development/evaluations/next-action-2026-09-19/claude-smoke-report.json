@@ -1,0 +1,31 @@
+{
+  "provider": "claude-cli",
+  "concurrency": 1,
+  "promptSourceSha256": "68a5f8885306b12ee09f3964b20c524d925faea6ae2725b6d7ec483878c05698",
+  "corpusSha256": "688fca87825ce6320f5f3f354b64b6224e9ac8606c6a707bbf56a2dc14aaa3ae",
+  "retryCount": 0,
+  "usageAndCost": "Provider CLI does not expose usage to this runner; unknown",
+  "model": "CLI default",
+  "syntheticCases": true,
+  "planned": 9,
+  "executed": 3,
+  "passed": 0,
+  "familyCount": 3,
+  "complete": false,
+  "accuracy": 0,
+  "modes": {
+    "classify-event": {
+      "total": 1,
+      "passed": 0
+    },
+    "attribute-transition": {
+      "total": 1,
+      "passed": 0
+    },
+    "recommend": {
+      "total": 1,
+      "passed": 0
+    }
+  },
+  "note": "Synthetic fixture results only. Time/ordering variants are correlated and must not be counted as independent evidence of production accuracy."
+}

@@ -11,7 +11,7 @@ import {
 export interface TaskModelRequest {
   messages: { role: 'system' | 'user'; content: string }[]
   schema: object
-  purpose?: 'task-chat'
+  purpose?: 'task-chat' | 'next-action'
   signal: AbortSignal
 }
 export type TaskModelTransport = (

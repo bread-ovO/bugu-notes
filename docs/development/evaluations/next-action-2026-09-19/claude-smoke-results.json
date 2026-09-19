@@ -1,0 +1,41 @@
+[
+  {
+    "id": "classify-bug_fix-0",
+    "family": "classify-bug_fix-0",
+    "mode": "classify-event",
+    "passed": false,
+    "error": "MODEL_TIMEOUT",
+    "elapsedMs": 60033,
+    "expected": {
+      "type": "bug_fix",
+      "related": true
+    }
+  },
+  {
+    "id": "link-0-0h",
+    "family": "link-0",
+    "mode": "attribute-transition",
+    "passed": false,
+    "error": "MODEL_TIMEOUT",
+    "elapsedMs": 60018,
+    "expected": {
+      "type": "bug_fix",
+      "related": true
+    }
+  },
+  {
+    "id": "recommend-bug_fix-0-normal",
+    "family": "recommend-bug_fix-0",
+    "mode": "recommend",
+    "passed": false,
+    "error": "MODEL_TIMEOUT",
+    "elapsedMs": 60020,
+    "expected": {
+      "type": "bug_fix",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  }
+]

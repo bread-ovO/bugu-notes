@@ -1,0 +1,650 @@
+[
+  {
+    "id": "classify-unknown-1",
+    "family": "classify-unknown-1",
+    "mode": "classify-event",
+    "passed": true,
+    "prediction": {
+      "mode": "classify-event",
+      "eventType": "unknown",
+      "action": "handle",
+      "related": false,
+      "confidence": 0.99,
+      "targetIds": [],
+      "citations": [],
+      "reason": "仅确认收到并致谢，没有需要继续处理的工作。"
+    },
+    "elapsedMs": 27492,
+    "expected": {
+      "type": "unknown",
+      "related": false
+    }
+  },
+  {
+    "id": "classify-unknown-0",
+    "family": "classify-unknown-0",
+    "mode": "classify-event",
+    "passed": true,
+    "prediction": {
+      "mode": "classify-event",
+      "eventType": "unknown",
+      "action": "handle",
+      "related": false,
+      "confidence": 0.99,
+      "targetIds": [],
+      "citations": [],
+      "reason": "仅为问候，没有需要处理的工作事项。"
+    },
+    "elapsedMs": 29029,
+    "expected": {
+      "type": "unknown",
+      "related": false
+    }
+  },
+  {
+    "id": "recommend-document-1-normal",
+    "family": "recommend-document-1",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "document",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.95,
+      "targetIds": [
+        "docs"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "更新项目 README 的部署步骤。"
+        }
+      ],
+      "reason": "任务是修改部署说明，文档编辑入口最匹配。"
+    },
+    "elapsedMs": 31767,
+    "expected": {
+      "type": "document",
+      "related": true,
+      "targetIds": [
+        "docs"
+      ]
+    }
+  },
+  {
+    "id": "classify-reply-1",
+    "family": "classify-reply-1",
+    "mode": "classify-event",
+    "passed": true,
+    "prediction": {
+      "mode": "classify-event",
+      "eventType": "reply",
+      "action": "reply",
+      "related": true,
+      "confidence": 0.98,
+      "targetIds": [],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "在群里回复对方的问题。"
+        }
+      ],
+      "reason": "明确要求在群内答复他人的问题。"
+    },
+    "elapsedMs": 31769,
+    "expected": {
+      "type": "reply",
+      "related": true
+    }
+  },
+  {
+    "id": "classify-reply-2",
+    "family": "classify-reply-2",
+    "mode": "classify-event",
+    "passed": true,
+    "prediction": {
+      "mode": "classify-event",
+      "eventType": "reply",
+      "action": "reply",
+      "related": true,
+      "confidence": 0.96,
+      "targetIds": [],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "确认收到后告诉项目经理。"
+        }
+      ],
+      "reason": "明确要求确认收到后向项目经理反馈，仍需执行答复。"
+    },
+    "elapsedMs": 28331,
+    "expected": {
+      "type": "reply",
+      "related": true
+    }
+  },
+  {
+    "id": "recommend-reply-2-normal",
+    "family": "recommend-reply-2",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "reply",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.94,
+      "targetIds": [
+        "feishu"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "确认收到后告诉项目经理。"
+        }
+      ],
+      "reason": "需要向项目经理反馈，飞书消息工具适合处理。"
+    },
+    "elapsedMs": 30273,
+    "expected": {
+      "type": "reply",
+      "related": true,
+      "targetIds": [
+        "feishu"
+      ]
+    }
+  },
+  {
+    "id": "classify-unknown-2",
+    "family": "classify-unknown-2",
+    "mode": "classify-event",
+    "passed": true,
+    "prediction": {
+      "mode": "classify-event",
+      "eventType": "unknown",
+      "action": "handle",
+      "related": false,
+      "confidence": 0.99,
+      "targetIds": [],
+      "citations": [],
+      "reason": "仅陈述天气，没有需要处理的工作或明确答复要求。"
+    },
+    "elapsedMs": 29648,
+    "expected": {
+      "type": "unknown",
+      "related": false
+    }
+  },
+  {
+    "id": "recommend-bug_fix-3-normal",
+    "family": "recommend-bug_fix-3",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "bug_fix",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.96,
+      "targetIds": [
+        "codex"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "付款成功却重复扣款，这个缺陷必须修复。"
+        }
+      ],
+      "reason": "明确要求修复程序缺陷，推荐代码编辑器处理。"
+    },
+    "elapsedMs": 35672,
+    "expected": {
+      "type": "bug_fix",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  },
+  {
+    "id": "classify-reply-3",
+    "family": "classify-reply-3",
+    "mode": "classify-event",
+    "passed": true,
+    "prediction": {
+      "mode": "classify-event",
+      "eventType": "reply",
+      "action": "reply",
+      "related": true,
+      "confidence": 0.99,
+      "targetIds": [],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "请回复这封邮件说明延期原因。"
+        }
+      ],
+      "reason": "明确要求回复邮件并说明延期原因。"
+    },
+    "elapsedMs": 31964,
+    "expected": {
+      "type": "reply",
+      "related": true
+    }
+  },
+  {
+    "id": "recommend-reply-3-normal",
+    "family": "recommend-reply-3",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "reply",
+      "action": "handle",
+      "related": false,
+      "confidence": 0.96,
+      "targetIds": [],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "请回复这封邮件说明延期原因。"
+        }
+      ],
+      "reason": "任务需要回复邮件，给定目标中没有明确支持邮件回复的入口。"
+    },
+    "elapsedMs": 31616,
+    "expected": {
+      "type": "reply",
+      "related": false,
+      "targetIds": []
+    }
+  },
+  {
+    "id": "recommend-reply-4-normal",
+    "family": "recommend-reply-4",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "reply",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.93,
+      "targetIds": [
+        "feishu"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "在讨论里向设计师反馈意见。"
+        }
+      ],
+      "reason": "需要在讨论中向对方反馈，适合使用飞书消息入口。"
+    },
+    "elapsedMs": 32757,
+    "expected": {
+      "type": "reply",
+      "related": true,
+      "targetIds": [
+        "feishu"
+      ]
+    }
+  },
+  {
+    "id": "recommend-development-5-normal",
+    "family": "recommend-development-5",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "development",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.9,
+      "targetIds": [
+        "codex"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "支持一键复制分享链接。"
+        }
+      ],
+      "reason": "需求涉及新增交互功能，适合在代码编辑器中实现。"
+    },
+    "elapsedMs": 34026,
+    "expected": {
+      "type": "development",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  },
+  {
+    "id": "recommend-research-7-normal",
+    "family": "recommend-research-7",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "research",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.95,
+      "targetIds": [
+        "browser"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "收集类似产品的用户反馈。"
+        }
+      ],
+      "reason": "需要搜索并收集同类产品反馈，适合使用搜索研究工具。"
+    },
+    "elapsedMs": 31614,
+    "expected": {
+      "type": "research",
+      "related": true,
+      "targetIds": [
+        "browser"
+      ]
+    }
+  },
+  {
+    "id": "recommend-bug_fix-3-reverse",
+    "family": "recommend-bug_fix-3",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "bug_fix",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.95,
+      "targetIds": [
+        "codex"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "付款成功却重复扣款，这个缺陷必须修复。"
+        }
+      ],
+      "reason": "明确要求修复程序缺陷，代码编辑器最适合下一步处理。"
+    },
+    "elapsedMs": 32506,
+    "expected": {
+      "type": "bug_fix",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  },
+  {
+    "id": "recommend-bug_fix-9-normal",
+    "family": "recommend-bug_fix-9",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "bug_fix",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.94,
+      "targetIds": [
+        "codex"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "升级后 Windows 无法启动，修复依赖问题。"
+        }
+      ],
+      "reason": "需要排查并修复依赖，代码编辑器最适合处理。"
+    },
+    "elapsedMs": 35925,
+    "expected": {
+      "type": "bug_fix",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  },
+  {
+    "id": "recommend-bug_fix-9-reverse",
+    "family": "recommend-bug_fix-9",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "bug_fix",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.94,
+      "targetIds": [
+        "codex"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "升级后 Windows 无法启动，修复依赖问题。"
+        }
+      ],
+      "reason": "需要排查并修复程序依赖，代码编辑器最匹配。"
+    },
+    "elapsedMs": 30102,
+    "expected": {
+      "type": "bug_fix",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  },
+  {
+    "id": "recommend-development-5-reverse",
+    "family": "recommend-development-5",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "development",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.91,
+      "targetIds": [
+        "codex"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "支持一键复制分享链接。"
+        }
+      ],
+      "reason": "需求涉及新增复制分享链接功能，适合通过代码编辑器实现。"
+    },
+    "elapsedMs": 38586,
+    "expected": {
+      "type": "development",
+      "related": true,
+      "targetIds": [
+        "codex"
+      ]
+    }
+  },
+  {
+    "id": "recommend-document-1-reverse",
+    "family": "recommend-document-1",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "document",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.95,
+      "targetIds": [
+        "docs"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "更新项目 README 的部署步骤。"
+        }
+      ],
+      "reason": "任务是更新部署说明，文档编辑最匹配。"
+    },
+    "elapsedMs": 32981,
+    "expected": {
+      "type": "document",
+      "related": true,
+      "targetIds": [
+        "docs"
+      ]
+    }
+  },
+  {
+    "id": "recommend-research-7-reverse",
+    "family": "recommend-research-7",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "research",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.94,
+      "targetIds": [
+        "browser"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "收集类似产品的用户反馈。"
+        }
+      ],
+      "reason": "该任务需要搜索并收集外部反馈，搜索研究入口最匹配。"
+    },
+    "elapsedMs": 33146,
+    "expected": {
+      "type": "research",
+      "related": true,
+      "targetIds": [
+        "browser"
+      ]
+    }
+  },
+  {
+    "id": "recommend-reply-2-reverse",
+    "family": "recommend-reply-2",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "reply",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.93,
+      "targetIds": [
+        "feishu"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "确认收到后告诉项目经理。"
+        }
+      ],
+      "reason": "需要向项目经理反馈确认结果，飞书消息入口与该沟通任务匹配。"
+    },
+    "elapsedMs": 30682,
+    "expected": {
+      "type": "reply",
+      "related": true,
+      "targetIds": [
+        "feishu"
+      ]
+    }
+  },
+  {
+    "id": "recommend-reply-4-reverse",
+    "family": "recommend-reply-4",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "reply",
+      "action": "handle",
+      "related": true,
+      "confidence": 0.91,
+      "targetIds": [
+        "feishu"
+      ],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "在讨论里向设计师反馈意见。"
+        }
+      ],
+      "reason": "需在原讨论中反馈，飞书消息入口最匹配。"
+    },
+    "elapsedMs": 30254,
+    "expected": {
+      "type": "reply",
+      "related": true,
+      "targetIds": [
+        "feishu"
+      ]
+    }
+  },
+  {
+    "id": "recommend-reply-3-reverse",
+    "family": "recommend-reply-3",
+    "mode": "recommend",
+    "passed": true,
+    "prediction": {
+      "mode": "recommend",
+      "eventType": "reply",
+      "action": "handle",
+      "related": false,
+      "confidence": 0.95,
+      "targetIds": [],
+      "citations": [
+        {
+          "id": "source",
+          "revision": 1,
+          "quote": "请回复这封邮件说明延期原因。"
+        }
+      ],
+      "reason": "需要回复邮件，但给定目标中没有明确支持邮件回复的入口。"
+    },
+    "elapsedMs": 32375,
+    "expected": {
+      "type": "reply",
+      "related": false,
+      "targetIds": []
+    }
+  }
+]

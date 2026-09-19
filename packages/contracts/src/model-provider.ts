@@ -46,7 +46,7 @@ export interface ModelProviderSnapshot {
     provider: ModelConfig['provider']
     model: string
     destination: string
-    purpose: 'task-chat' | 'task-analysis'
+    purpose: 'task-chat' | 'task-analysis' | 'next-action'
     sentAt: string
     messages: { role: 'system' | 'user'; content: string }[]
     truncated: boolean
